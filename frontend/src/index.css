@@ -1,42 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-gold-50: #fffbeb;
-  --color-gold-100: #fef3c7;
-  --color-gold-200: #fde68a;
-  --color-gold-300: #fcd34d;
-  --color-gold-400: #fbbf24;
-  --color-gold-500: #f59e0b;
-  --color-gold-600: #d97706;
-  --color-gold-700: #b45309;
-  --color-gold-800: #92400e;
-  --color-gold-900: #78350f;
+  /* Ember — muted brass/amber, the primary brand accent.
+     Deliberately less saturated than a stock "gold" so it doesn't
+     read as a reskinned amber palette. */
+  --color-ember-50: #fbf6ec;
+  --color-ember-100: #f5e7c9;
+  --color-ember-200: #eacb8e;
+  --color-ember-300: #dfaf5c;
+  --color-ember-400: #d9a441;
+  --color-ember-500: #c08a2e;
+  --color-ember-600: #a5721f;
+  --color-ember-700: #7d5417;
+  --color-ember-800: #563a10;
+  --color-ember-900: #33210a;
 
-  /* Hooks into your HTML <link> fonts smoothly */
-  --font-display: "Inter", system-ui, sans-serif;
+  --color-ink-700: #1e212b;
+  --color-ink-800: #14161d;
+  --color-ink-900: #0e1015;
+  --color-ink-950: #0a0c10;
+
+  --font-display: "Sora", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 
   --text-2xs: 0.625rem;
   --text-2xs--line-height: 1rem;
 
-  --shadow-gold: 0 4px 24px rgba(245, 158, 11, 0.2);
-  --shadow-gold-lg: 0 8px 48px rgba(245, 158, 11, 0.25);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
-  --shadow-dark: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-ember: 0 4px 24px rgba(217, 164, 65, 0.25);
+  --shadow-ember-lg: 0 15px 40px -10px rgba(217, 164, 65, 0.5);
+  --shadow-card: 0 2px 10px -2px rgba(20, 20, 25, 0.06);
+  --shadow-card-hover: 0 25px 60px -15px rgba(76, 95, 217, 0.2);
+  --shadow-ink: 0 20px 60px -15px rgba(10, 12, 16, 0.5);
 
-  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-fade-in: fadeIn 0.6s ease-out;
   --animate-slide-up: slideUp 0.4s ease-out;
   --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-gold: pulseGold 2s ease-in-out infinite;
+  --animate-pulse-ember: pulseEmber 2.4s ease-in-out infinite;
   --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-spin-slow: spinSlow 30s linear infinite;
 
   @keyframes fadeIn {
     from {
       opacity: 0;
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
+      transform: none;
     }
   }
   @keyframes slideUp {
@@ -52,19 +63,19 @@
   @keyframes float {
     0%,
     100% {
-      transform: translateY(0);
+      transform: translateY(0) rotate(0deg);
     }
     50% {
-      transform: translateY(-12px);
+      transform: translateY(-12px) rotate(1.5deg);
     }
   }
-  @keyframes pulseGold {
+  @keyframes pulseEmber {
     0%,
     100% {
-      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 0 0 rgba(217, 164, 65, 0.45);
     }
     50% {
-      box-shadow: 0 0 0 12px rgba(245, 158, 11, 0);
+      box-shadow: 0 0 0 14px rgba(217, 164, 65, 0);
     }
   }
   @keyframes shimmer {
@@ -75,13 +86,21 @@
       background-position: 200% 0;
     }
   }
+  @keyframes spinSlow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @utility bg-hero-pattern {
-  background-image: radial-gradient(ellipse at top, #1a0a02 0%, #0a0500 60%);
+  background-image: radial-gradient(ellipse at top, #14161d 0%, #05060a 65%);
 }
-@utility bg-gold-gradient {
-  background-image: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+@utility bg-ember-gradient {
+  background-image: linear-gradient(135deg, #d9a441 0%, #a5721f 100%);
 }
 @utility text-balance {
   text-wrap: balance;
@@ -92,8 +111,7 @@
     scroll-behavior: smooth;
   }
   body {
-    /* Instantly applies Inter across the app wrapper */
-    @apply font-body bg-gray-50 text-gray-900 antialiased;
+    @apply font-body bg-zinc-50 text-zinc-900 antialiased;
     font-size: 15px;
     line-height: 1.6;
   }
@@ -103,68 +121,75 @@
     @apply font-display;
   }
   ::selection {
-    @apply bg-gold-200 text-gold-900;
+    @apply bg-ember-200 text-ember-900;
   }
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-zinc-100;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    @apply bg-zinc-300 rounded-full;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-600 active:bg-gold-700 text-white font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-ember-400 to-ember-600 hover:-translate-y-0.5 active:translate-y-0 text-ink-950 font-semibold rounded-full shadow-ember hover:shadow-ember-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ember-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 text-sm;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-xl transition-all duration-200 text-sm;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 text-zinc-700 font-medium rounded-full transition-all duration-300 text-sm;
+  }
+  /* For use on dark sections (hero, CTA banners) where .btn-secondary's
+     white surface wouldn't read correctly. */
+  .btn-secondary-dark {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/[0.04] border border-white/15 hover:bg-white/10 hover:border-white/25 text-white font-medium rounded-full backdrop-blur-sm transition-all duration-300 text-sm;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-150 text-sm font-medium;
+    @apply inline-flex items-center gap-1 text-ember-600 hover:text-ember-700 hover:gap-2 font-semibold rounded-lg transition-all duration-200 text-sm;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-full transition-all duration-200 text-sm;
   }
   .card {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-card;
+    @apply bg-white rounded-3xl border border-zinc-100 shadow-card;
   }
   .card-hover {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200;
+    @apply bg-white rounded-3xl border border-zinc-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300;
   }
   .input-field {
-    @apply w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition-all;
+    @apply w-full px-4 py-3 bg-white border border-zinc-200 rounded-2xl text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-ember-400 focus:border-transparent transition-all;
   }
   .badge-open {
     @apply inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-semibold;
   }
   .badge-closed {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-semibold;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-full text-xs font-semibold;
   }
   .badge-upcoming {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-semibold;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full text-xs font-semibold;
   }
-  .badge-gold {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-gold-50 text-gold-800 border border-gold-200 rounded-full text-xs font-semibold;
+  .badge-ember {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 bg-ember-50 text-ember-800 border border-ember-200 rounded-full text-xs font-semibold;
   }
   .stat-card {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-card p-5;
+    @apply bg-white rounded-3xl border border-zinc-100 shadow-card p-5;
   }
+  /* Color-agnostic by design — pair with a text-{color}-600 utility
+     per usage (utilities layer always wins over this layer). */
   .section-label {
-    @apply text-xs font-semibold text-gray-400 uppercase tracking-widest;
+    @apply text-2xs font-bold text-zinc-400 uppercase tracking-[0.2em];
   }
   .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-10;
   }
   .progress-bar {
-    @apply h-2 bg-gray-100 rounded-full overflow-hidden;
+    @apply h-1.5 bg-zinc-100 rounded-full overflow-hidden;
   }
   .progress-fill {
-    @apply h-full bg-gradient-to-r from-gold-400 to-gold-600 rounded-full transition-all duration-700 ease-out;
+    @apply h-full bg-gradient-to-r from-ember-400 to-ember-600 rounded-full transition-all duration-700 ease-out;
   }
   .glass {
     backdrop-filter: blur(12px);
@@ -172,7 +197,7 @@
   }
   .glass-dark {
     backdrop-filter: blur(16px);
-    background: rgba(10, 5, 0, 0.75);
+    background: rgba(10, 12, 16, 0.75);
   }
 
   .particle {
@@ -180,16 +205,10 @@
     border-radius: 50%;
     background: radial-gradient(
       circle,
-      rgba(245, 158, 11, 0.6) 0%,
+      rgba(217, 164, 65, 0.55) 0%,
       transparent 70%
     );
     animation: float 6s ease-in-out infinite;
-  }
-}
-
-@layer utilities {
-  .\32xs {
-    font-size: 0.625rem;
   }
 }
 

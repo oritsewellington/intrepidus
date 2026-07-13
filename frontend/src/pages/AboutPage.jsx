@@ -29,7 +29,7 @@ export default function AboutPage() {
         <div className="page-container text-center">
           <Crown size={40} className="text-gold-400 mx-auto mb-5" />
           <h1 className="font-display text-4xl font-bold text-white mb-4">
-            About FASA Awards {currentYear}
+            About INTREPIDUS Awards {currentYear}
           </h1>
           <p className="text-gray-300 max-w-xl mx-auto">
             Organized by the Faculty of Arts Student Association, University of
@@ -47,9 +47,9 @@ export default function AboutPage() {
               Recognizing greatness, one vote at a time
             </h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              The FASA Awards is an annual celebration honoring the brightest,
-              most influential, and most talented students of the Faculty of
-              Arts.
+              The INTREPIDUS Awards is an annual celebration honoring the
+              brightest, most influential, and most talented students of the
+              Faculty of Arts.
               {totalCategories > 0 && (
                 <>
                   {" "}

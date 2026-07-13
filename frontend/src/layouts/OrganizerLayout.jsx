@@ -41,7 +41,7 @@ export default function OrganizerLayout() {
             <p className="text-white font-display font-bold text-sm leading-none">
               Organizer
             </p>
-            <p className="text-gold-400 text-2xs mt-0.5">FASA 2026</p>
+            <p className="text-gold-400 text-2xs mt-0.5">INTREPIDUS 2026</p>
           </div>
         </div>
 

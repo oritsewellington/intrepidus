@@ -56,10 +56,10 @@ export default function VoteSuccessPage() {
   useConfettiRain(!pending);
 
   const handleShare = () => {
-    const text = `I just voted for ${candidate} in the FASA Awards 2026! 🏆 Cast your vote too at ${window.location.origin}`;
+    const text = `I just voted for ${candidate} in the INTREPIDUS Awards 2026! 🏆 Cast your vote too at ${window.location.origin}`;
     if (navigator.share) {
       navigator.share({
-        title: "I voted in FASA Awards 2026!",
+        title: "I voted in INTREPIDUS Awards 2026!",
         text,
         url: window.location.origin,
       });

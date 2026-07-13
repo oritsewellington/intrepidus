@@ -162,7 +162,7 @@ function CandidateCard({ candidate, rank, totalVotes, eventId, isOpen }) {
         </div>
         <div className="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-0.5 rounded-full">
           {candidate.candidateCode ||
-            "FASA-" + String(candidate.candidateNumber).padStart(4, "0")}
+            "INTREPIDUS-" + String(candidate.candidateNumber).padStart(4, "0")}
         </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
           <p className="text-white font-semibold text-sm leading-snug">

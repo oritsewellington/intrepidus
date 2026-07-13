@@ -9,6 +9,14 @@ import {
   ChevronRight,
   X,
   Filter,
+  Trophy,
+  Users,
+  BookOpen,
+  Star,
+  Music,
+  Shirt,
+  Briefcase,
+  Sparkles,
 } from "lucide-react";
 import { useGetEventsQuery } from "../../store/api/eventsApi.js";
 import { useGetCategoriesQuery } from "../../store/api/categoriesApi.js";
@@ -27,16 +35,43 @@ import {
 const STATUS_FILTERS = ["all", "open", "upcoming", "closed"];
 const EVENTS_PER_PAGE = 9;
 
-const MR_MISS_FASA_BANNER = "/mr-miss-fasa.webp";
-const DEFAULT_EVENT_BANNER = "/fasa-banner.webp";
+// Icon + deep duotone gradient per category group, used to generate each
+// event card's banner — no image asset required. Kept in sync with the
+// palette in HomePage.jsx; consider extracting to a shared util once all
+// pages are redesigned.
+const GROUP_ICONS = {
+  Social: Users,
+  Academic: BookOpen,
+  Popularity: Star,
+  Sports: Trophy,
+  Leadership: Crown,
+  Creative: Music,
+  Fashion: Shirt,
+  Business: Briefcase,
+  General: Sparkles,
+};
 
-function isMrMissFasaEvent(event) {
+const BANNER_GRADIENTS = {
+  Social: "from-indigo-950 via-indigo-900 to-ink-950",
+  Academic: "from-violet-950 via-violet-900 to-ink-950",
+  Popularity: "from-ember-900 via-ember-800 to-ink-950",
+  Sports: "from-emerald-950 via-emerald-900 to-ink-950",
+  Leadership: "from-rose-950 via-rose-900 to-ink-950",
+  Creative: "from-fuchsia-950 via-pink-900 to-ink-950",
+  Fashion: "from-purple-950 via-violet-900 to-ink-950",
+  Business: "from-sky-950 via-indigo-900 to-ink-950",
+  General: "from-orange-950 via-ember-800 to-ink-950",
+};
+
+// ASSUMPTION: flagship event is named "Mr / Miss INTREPIDUS" — kept in
+// sync with the same check in HomePage.jsx.
+function isFlagshipEvent(event) {
   const name = (event.category || event.title || "")
     .toLowerCase()
     .replace(/\./g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return name === "mr fasa" || name === "miss fasa";
+  return name === "mr intrepidus" || name === "miss intrepidus";
 }
 
 export default function EventsPage() {
@@ -97,46 +132,40 @@ export default function EventsPage() {
 
   return (
     <div className="animate-fade-in">
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-white border-b border-zinc-100">
         <div className="page-container py-10">
-          <p className="section-label mb-2">Cast your vote</p>
-          <h1 className="font-display text-3xl font-bold text-gray-900 mb-1">
+          <p className="section-label text-ember-600 mb-2">Cast your vote</p>
+          <h1 className="font-display text-3xl font-bold text-zinc-900 mb-1">
             All Voting Events
           </h1>
-          <p className="text-gray-500 text-sm mb-5">
+          <p className="text-zinc-500 text-sm mb-5">
             Choose an event category and vote for your favourite candidate.
           </p>
 
           {!isLoading && (
-            <div className="flex flex-wrap gap-6 mb-7 pb-6 border-b border-gray-50">
+            <div className="flex flex-wrap gap-6 mb-7 pb-6 border-b border-zinc-50">
               <div>
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-zinc-900">
                   {stats.total}
                 </span>
-                <span className="text-xs text-gray-400 ml-1.5">
+                <span className="text-xs text-zinc-400 ml-1.5">
                   total events
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-zinc-900">
                   {stats.open}
                 </span>
-                <span className="text-xs text-gray-400 ml-1">live now</span>
+                <span className="text-xs text-zinc-400 ml-1">live now</span>
               </div>
-              {/* <div>
-                <span className="text-xl font-bold text-gray-900">
-                  {formatNumber(stats.totalVotes)}
-                </span>
-                <span className="text-xs text-gray-400 ml-1.5">votes cast</span>
-              </div> */}
             </div>
           )}
 
           <div className="relative max-w-md mb-4">
             <Search
               size={16}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400"
             />
             <input
               type="text"
@@ -148,7 +177,7 @@ export default function EventsPage() {
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-500"
                 aria-label="Clear search"
               >
                 <X size={14} />
@@ -157,15 +186,15 @@ export default function EventsPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 bg-gray-50 rounded-xl p-1">
+            <div className="flex items-center gap-1 bg-zinc-100 rounded-full p-1">
               {STATUS_FILTERS.map((f) => (
                 <button
                   key={f}
                   onClick={() => setStatusFilter(f)}
-                  className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
                     statusFilter === f
-                      ? "bg-gray-900 text-white shadow-sm"
-                      : "text-gray-500 hover:text-gray-800"
+                      ? "bg-ink-950 text-white shadow-sm"
+                      : "text-zinc-500 hover:text-zinc-800"
                   }`}
                 >
                   {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -175,12 +204,12 @@ export default function EventsPage() {
 
             {categoryGroups.length > 0 && (
               <>
-                <div className="w-px h-6 bg-gray-200 mx-1 hidden sm:block" />
+                <div className="w-px h-6 bg-zinc-200 mx-1 hidden sm:block" />
                 <div className="relative">
                   <select
                     value={groupFilter}
                     onChange={(e) => setGroupFilter(e.target.value)}
-                    className="appearance-none pl-8 pr-8 py-2 rounded-xl text-sm font-medium border border-gray-200 bg-white text-gray-600 hover:border-gray-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                    className="appearance-none pl-8 pr-8 py-2 rounded-full text-sm font-medium border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ember-400/30"
                   >
                     <option value="all">All Groups</option>
                     {categoryGroups.map((g) => (
@@ -191,7 +220,7 @@ export default function EventsPage() {
                   </select>
                   <Filter
                     size={13}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
                   />
                 </div>
               </>
@@ -204,7 +233,7 @@ export default function EventsPage() {
                   setStatusFilter("all");
                   setGroupFilter("all");
                 }}
-                className="text-xs text-gray-400 hover:text-gray-600 underline underline-offset-2 ml-1"
+                className="text-xs text-zinc-400 hover:text-ember-600 underline underline-offset-2 ml-1 transition-colors"
               >
                 Clear filters
               </button>
@@ -229,21 +258,21 @@ export default function EventsPage() {
         ) : (
           <>
             <div className="flex items-center justify-between mb-5 px-1">
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-zinc-400">
                 Showing{" "}
-                <span className="font-medium text-gray-600">
+                <span className="font-medium text-zinc-600">
                   {startIdx + 1}–
                   {Math.min(startIdx + EVENTS_PER_PAGE, filtered.length)}
                 </span>{" "}
                 of{" "}
-                <span className="font-medium text-gray-600">
+                <span className="font-medium text-zinc-600">
                   {filtered.length}
                 </span>{" "}
                 event
                 {filtered.length !== 1 ? "s" : ""}
               </p>
               {totalPages > 1 && (
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-zinc-400">
                   Page {safePage} of {totalPages}
                 </p>
               )}
@@ -251,7 +280,11 @@ export default function EventsPage() {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {paginatedEvents.map((ev) => (
-                <EventCard key={ev._id} event={ev} />
+                <EventCard
+                  key={ev._id}
+                  event={ev}
+                  category={categories.find((c) => c._id === ev.categoryId)}
+                />
               ))}
             </div>
 
@@ -304,7 +337,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 text-gray-500 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronLeft size={16} />
       </button>
@@ -312,7 +345,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         page === "..." ? (
           <span
             key={`dots-${idx}`}
-            className="w-9 h-9 flex items-center justify-center text-gray-300 text-sm select-none"
+            className="w-9 h-9 flex items-center justify-center text-zinc-300 text-sm select-none"
           >
             …
           </span>
@@ -321,10 +354,10 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
             key={page}
             onClick={() => onPageChange(page)}
             aria-current={page === currentPage ? "page" : undefined}
-            className={`w-9 h-9 rounded-xl text-sm font-medium border transition-all ${
+            className={`w-9 h-9 rounded-full text-sm font-medium border transition-all ${
               page === currentPage
-                ? "bg-gold-500 text-white border-gold-500 shadow-sm"
-                : "bg-white text-gray-600 border-gray-200 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50"
+                ? "bg-ember-500 text-white border-ember-500 shadow-sm"
+                : "bg-white text-zinc-600 border-zinc-200 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50"
             }`}
           >
             {page}
@@ -335,7 +368,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 text-gray-500 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronRight size={16} />
       </button>
@@ -343,33 +376,74 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   );
 }
 
-function EventCard({ event }) {
+function EventBanner({ category, isFlagship }) {
+  if (isFlagship) {
+    return (
+      <div className="absolute inset-0 bg-gradient-to-br from-ink-900 via-[#171a22] to-ink-950 overflow-hidden">
+        <div className="absolute -right-10 -top-10 w-44 h-44 rounded-full border border-ember-400/20" />
+        <div className="absolute -right-5 -top-5 w-32 h-32 rounded-full border border-ember-400/15" />
+        <span
+          className="font-display absolute -bottom-6 -right-2 text-[110px] font-extrabold leading-none text-white/[0.05] select-none"
+          aria-hidden="true"
+        >
+          IX
+        </span>
+      </div>
+    );
+  }
+
+  const Icon = GROUP_ICONS[category?.group] || Trophy;
+  const gradient =
+    BANNER_GRADIENTS[category?.group] || "from-ink-900 to-ink-950";
+
+  return (
+    <div
+      className={`absolute inset-0 bg-gradient-to-br ${gradient} overflow-hidden`}
+    >
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.08]"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id={`dots-${category?._id || "default"}`}
+            width="22"
+            height="22"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="1.2" cy="1.2" r="1.2" fill="#ffffff" />
+          </pattern>
+        </defs>
+        <rect
+          width="100%"
+          height="100%"
+          fill={`url(#dots-${category?._id || "default"})`}
+        />
+      </svg>
+      <Icon
+        size={104}
+        strokeWidth={1.2}
+        className="absolute -right-4 -bottom-5 text-white/[0.09] rotate-[-12deg]"
+      />
+    </div>
+  );
+}
+
+function EventCard({ event, category }) {
   const status = getEventStatus(event.startDate, event.endDate, event.isOpen);
   const isOpen = status === "open";
-  const isFlagship = isMrMissFasaEvent(event);
-
-  // Priority: real admin-uploaded banner > flagship poster (Mr/Miss FASA)
-  // > general FASA awards banner. Every card now has an image — no more
-  // dark placeholder fallback.
-  const bannerSrc =
-    event.bannerImage ||
-    (isFlagship ? MR_MISS_FASA_BANNER : DEFAULT_EVENT_BANNER);
+  const isFlagship = isFlagshipEvent(event);
 
   return (
     <Link
       to={`/events/${event._id}`}
-      className={`card block overflow-hidden group transition-all duration-200 hover:-translate-y-1 hover:shadow-card-hover ${
+      className={`card-hover block overflow-hidden group ${
         !isOpen ? "opacity-75" : ""
-      } ${isFlagship ? "ring-1 ring-gold-400/40" : ""}`}
+      } ${isFlagship ? "ring-1 ring-ember-400/40" : ""}`}
     >
       <div className="relative w-full h-44 overflow-hidden">
-        <img
-          src={bannerSrc}
-          alt={event.title}
-          className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${
-            isFlagship ? "object-top" : "object-center"
-          }`}
-        />
+        <EventBanner category={category} isFlagship={isFlagship} />
+
         {isOpen && (
           <span className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-2xs font-semibold">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />{" "}
@@ -377,12 +451,12 @@ function EventCard({ event }) {
           </span>
         )}
         {isFlagship && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold-500/90 backdrop-blur-sm text-black text-2xs font-bold">
+          <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-ember-500/90 backdrop-blur-sm text-ink-950 text-2xs font-bold">
             <Crown size={11} /> FLAGSHIP
           </span>
         )}
         {/* subtle bottom gradient so the category label stays readable
-            over the busy banner art instead of floating on raw pixels */}
+            over the generated banner art */}
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/50 to-transparent" />
         {event.category && (
           <span className="absolute bottom-2.5 left-3 text-xs text-white/90 font-medium drop-shadow-sm">
@@ -394,20 +468,20 @@ function EventCard({ event }) {
       <div className="p-5">
         <div className="flex items-center justify-between gap-2 mb-3">
           <EventStatusBadge status={status} />
-          <span className="text-xs text-gray-600 font-bold">
+          <span className="text-xs text-zinc-600 font-bold">
             ₦{(event.pricePerVote / 100).toLocaleString()}/vote
           </span>
         </div>
-        <h2 className="font-display font-bold text-gray-900 text-base leading-snug mb-1 group-hover:text-gold-700 transition-colors line-clamp-2">
+        <h2 className="font-display font-bold text-zinc-900 text-base leading-snug mb-1 group-hover:text-ember-700 transition-colors line-clamp-2">
           {event.title}
         </h2>
-        <p className="text-xs text-gray-500 mb-3">{event.organization}</p>
+        <p className="text-xs text-zinc-500 mb-3">{event.organization}</p>
         {isOpen && <CountdownTimer targetDate={event.endDate} />}
-        <div className="flex items-center justify-between text-xs border-t border-gray-50 pt-3 mt-3">
-          <span className="flex items-center gap-1 text-gray-600 font-medium">
+        <div className="flex items-center justify-between text-xs border-t border-zinc-50 pt-3 mt-3">
+          <span className="flex items-center gap-1 text-zinc-600 font-medium">
             <Calendar size={11} /> {formatShortDate(event.endDate)}
           </span>
-          <span className="font-semibold text-gold-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+          <span className="font-semibold text-ember-600 flex items-center gap-1 group-hover:gap-2 transition-all">
             {isOpen ? "Vote now" : "View results"} <ArrowRight size={12} />
           </span>
         </div>

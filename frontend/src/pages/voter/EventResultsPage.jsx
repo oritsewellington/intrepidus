@@ -2,13 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Zap } from "lucide-react";
 import EventLeaderboard from "../../components/EventLeaderboard.jsx";
 
-/**
- * EventResultsPage — /events/:eventId/results
- * -----------------------------------------------------------------------
- * Full standings view for one event. Dark hero band matches the
- * homepage's gold/gray-900 treatment so this doesn't feel like a
- * bolted-on admin screen.
- */
 export default function EventResultsPage() {
   const { eventId } = useParams();
 

@@ -10,9 +10,16 @@ import {
   Trophy,
   ChevronLeft,
   ChevronRight,
+  BookOpen,
+  Star,
+  Music,
+  Shirt,
+  Briefcase,
+  Sparkles,
 } from "lucide-react";
 import { useGetEventQuery } from "../../store/api/eventsApi.js";
 import { useGetCandidatesQuery } from "../../store/api/candidatesApi.js";
+import { useGetCategoriesQuery } from "../../store/api/categoriesApi.js";
 import {
   getEventStatus,
   formatEventDate,
@@ -31,19 +38,43 @@ import {
 const MEDALS = ["🥇", "🥈", "🥉"];
 const CANDIDATES_PER_PAGE = 12;
 
-// Same flagship-detection + banner fallback logic as the events list, kept
-// in sync so a candidate lands on a detail page that matches the card
-// they clicked from.
-const MR_MISS_FASA_BANNER = "/mr-miss-fasa.webp";
-const DEFAULT_EVENT_BANNER = "/fasa-banner.webp";
+// Icon + deep duotone gradient per category group — generates the hero
+// banner without an image asset. Kept in sync with the same maps in
+// HomePage.jsx / EventsPage.jsx; worth extracting to a shared util once
+// every page has been redesigned.
+const GROUP_ICONS = {
+  Social: Users,
+  Academic: BookOpen,
+  Popularity: Star,
+  Sports: Trophy,
+  Leadership: Crown,
+  Creative: Music,
+  Fashion: Shirt,
+  Business: Briefcase,
+  General: Sparkles,
+};
 
-function isMrMissFasaEvent(event) {
+const BANNER_GRADIENTS = {
+  Social: "from-indigo-950 via-indigo-900 to-ink-950",
+  Academic: "from-violet-950 via-violet-900 to-ink-950",
+  Popularity: "from-ember-900 via-ember-800 to-ink-950",
+  Sports: "from-emerald-950 via-emerald-900 to-ink-950",
+  Leadership: "from-rose-950 via-rose-900 to-ink-950",
+  Creative: "from-fuchsia-950 via-pink-900 to-ink-950",
+  Fashion: "from-purple-950 via-violet-900 to-ink-950",
+  Business: "from-sky-950 via-indigo-900 to-ink-950",
+  General: "from-orange-950 via-ember-800 to-ink-950",
+};
+
+// Same flagship-detection logic as the events list, kept in sync so a
+// candidate lands on a detail page that matches the card they clicked from.
+function isFlagshipEvent(event) {
   const name = (event.category || event.title || "")
     .toLowerCase()
     .replace(/\./g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return name === "mr fasa" || name === "miss fasa";
+  return name === "mr intrepidus" || name === "miss intrepidus";
 }
 
 export default function EventDetailPage() {
@@ -51,6 +82,7 @@ export default function EventDetailPage() {
   const { data: event, isLoading: evLoading } = useGetEventQuery(eventId);
   const { data: candidates = [], isLoading: cLoading } =
     useGetCandidatesQuery(eventId);
+  const { data: categories = [] } = useGetCategoriesQuery();
 
   const [currentPage, setCurrentPage] = useState(1);
   const candidatesTopRef = useRef(null);
@@ -64,7 +96,7 @@ export default function EventDetailPage() {
   if (!event)
     return (
       <div className="py-24 px-5 text-center">
-        <p className="text-gray-500 mb-4">Event not found.</p>
+        <p className="text-zinc-500 mb-4">Event not found.</p>
         <Link to="/events" className="btn-primary">
           Back to events
         </Link>
@@ -77,10 +109,8 @@ export default function EventDetailPage() {
   const totalVotes = getTotalVotes(candidates);
   const leaderVotes = ranked[0]?.totalVotes || 0;
 
-  const isFlagship = isMrMissFasaEvent(event);
-  const bannerSrc =
-    event.bannerImage ||
-    (isFlagship ? MR_MISS_FASA_BANNER : DEFAULT_EVENT_BANNER);
+  const isFlagship = isFlagshipEvent(event);
+  const category = categories.find((c) => c._id === event.categoryId);
 
   const totalPages = Math.max(
     1,
@@ -102,18 +132,13 @@ export default function EventDetailPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen animate-fade-in">
-      {/* ── Hero: banner with overlaid title/badges ─────────────────── */}
-      <div className="relative bg-gray-900">
+    <div className="bg-zinc-50 min-h-screen animate-fade-in">
+      {/* ── Hero: generated banner with overlaid title/badges ───────── */}
+      <div className="relative bg-ink-950">
         <div className="relative w-full h-[52vw] max-h-[420px] min-h-[260px] overflow-hidden">
-          <img
-            src={bannerSrc}
-            alt={event.title}
-            className={`w-full h-full object-cover ${isFlagship ? "object-top" : "object-center"}`}
-          />
+          <EventHero category={category} isFlagship={isFlagship} />
           {/* Scrim: strong at the bottom for text legibility, light at top
-              so the back button/flagship tag stay readable without hiding
-              the art. */}
+              so the back button/flagship tag stay readable. */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
         </div>
 
@@ -125,7 +150,7 @@ export default function EventDetailPage() {
         </Link>
 
         {isFlagship && (
-          <span className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-1 px-3 py-1.5 rounded-full bg-gold-500/90 backdrop-blur-sm text-black text-xs font-bold shadow-sm">
+          <span className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-1 px-3 py-1.5 rounded-full bg-ember-500/90 backdrop-blur-sm text-ink-950 text-xs font-bold shadow-sm">
             <Crown size={12} /> FLAGSHIP EVENT
           </span>
         )}
@@ -135,14 +160,14 @@ export default function EventDetailPage() {
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <EventStatusBadge status={status} />
               {event.category && (
-                <span className="badge-gold">{event.category}</span>
+                <span className="badge-ember">{event.category}</span>
               )}
             </div>
             <h1 className="font-display text-[clamp(1.5rem,5vw,2.5rem)] font-extrabold text-white leading-tight mb-1.5 drop-shadow-sm max-w-2xl">
               {event.title}
             </h1>
             {event.organization && (
-              <p className="text-sm text-gray-300">{event.organization}</p>
+              <p className="text-sm text-zinc-300">{event.organization}</p>
             )}
           </div>
         </div>
@@ -163,19 +188,14 @@ export default function EventDetailPage() {
                 label="Ends"
                 value={formatEventDate(event.endDate)}
               />
-              {/* <MetaItem
-                icon={Users}
-                label="Votes cast"
-                value={totalVotes > 100 ? "100+" : totalVotes.toLocaleString()}
-              /> */}
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex flex-col bg-gradient-to-br from-gold-50 to-gold-100 border border-gold-200 rounded-xl px-4 py-2.5">
-                <span className="text-2xs font-semibold text-gold-800 uppercase tracking-wide">
+              <div className="flex flex-col bg-gradient-to-br from-ember-50 to-ember-100 border border-ember-200 rounded-2xl px-4 py-2.5">
+                <span className="text-2xs font-semibold text-ember-800 uppercase tracking-wide">
                   Price per vote
                 </span>
-                <span className="text-xl font-extrabold text-gold-900 leading-tight">
+                <span className="text-xl font-extrabold text-ember-900 leading-tight">
                   ₦{(event.pricePerVote / 100).toLocaleString()}
                 </span>
               </div>
@@ -191,13 +211,13 @@ export default function EventDetailPage() {
           </div>
 
           {votingOpen && (
-            <div className="sm:hidden mt-4 pt-4 border-t border-gray-50">
+            <div className="sm:hidden mt-4 pt-4 border-t border-zinc-50">
               <CountdownTimer targetDate={event.endDate} label="Closes in" />
             </div>
           )}
 
           {event.description && (
-            <p className="text-sm text-gray-600 leading-relaxed mt-5 pt-5 border-t border-gray-50">
+            <p className="text-sm text-zinc-600 leading-relaxed mt-5 pt-5 border-t border-zinc-50">
               {event.description}
             </p>
           )}
@@ -210,8 +230,8 @@ export default function EventDetailPage() {
           <div
             className={`rounded-2xl px-5 py-3.5 text-sm font-semibold text-center border ${
               status === "upcoming"
-                ? "bg-blue-50 text-blue-700 border-blue-200"
-                : "bg-red-50 text-red-700 border-red-200"
+                ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                : "bg-rose-50 text-rose-700 border-rose-200"
             }`}
           >
             {status === "upcoming"
@@ -233,24 +253,24 @@ export default function EventDetailPage() {
           <>
             <div className="flex items-end justify-between flex-wrap gap-2 mb-1">
               <div>
-                <h2 className="font-display text-xl font-extrabold text-gray-900">
+                <h2 className="font-display text-xl font-extrabold text-zinc-900">
                   {ranked.length} Candidate{ranked.length !== 1 ? "s" : ""}
                 </h2>
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className="text-xs text-zinc-400 mt-0.5">
                   Bars show position relative to the leader
                 </p>
               </div>
             </div>
 
             {totalPages > 1 && (
-              <p className="text-xs text-gray-400 mb-4">
+              <p className="text-xs text-zinc-400 mb-4">
                 Showing{" "}
-                <span className="font-semibold text-gray-600">
+                <span className="font-semibold text-zinc-600">
                   {startIdx + 1}–
                   {Math.min(startIdx + CANDIDATES_PER_PAGE, ranked.length)}
                 </span>{" "}
                 of{" "}
-                <span className="font-semibold text-gray-600">
+                <span className="font-semibold text-zinc-600">
                   {ranked.length}
                 </span>
               </p>
@@ -283,9 +303,9 @@ export default function EventDetailPage() {
             )}
 
             {totalVotes > 0 && (
-              <div className="flex items-center gap-2.5 mt-6 px-4 py-3 bg-white rounded-xl border border-gray-100">
-                <Trophy size={15} className="text-gold-500 flex-shrink-0" />
-                <p className="text-xs text-gray-500 leading-relaxed">
+              <div className="flex items-center gap-2.5 mt-6 px-4 py-3 bg-white rounded-xl border border-zinc-100">
+                <Trophy size={15} className="text-ember-500 flex-shrink-0" />
+                <p className="text-xs text-zinc-500 leading-relaxed">
                   Progress bars show each candidate's votes relative to the
                   current leader. The leader always shows a full bar.
                   Percentages show share of total votes.
@@ -299,21 +319,86 @@ export default function EventDetailPage() {
   );
 }
 
+function EventHero({ category, isFlagship }) {
+  if (isFlagship) {
+    return (
+      <div className="absolute inset-0 bg-gradient-to-br from-ink-900 via-[#171a22] to-ink-950 overflow-hidden">
+        <svg
+          className="absolute inset-0 w-full h-full opacity-[0.06]"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern
+              id="hero-dots-flagship"
+              width="28"
+              height="28"
+              patternUnits="userSpaceOnUse"
+            >
+              <circle cx="1.5" cy="1.5" r="1.5" fill="#D9A441" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hero-dots-flagship)" />
+        </svg>
+
+        <div className="absolute -right-28 -top-28 w-[420px] h-[420px] rounded-full border border-ember-400/15" />
+        <div className="absolute -right-16 -top-16 w-[320px] h-[320px] rounded-full border border-ember-400/10" />
+        <span
+          className="font-display absolute -bottom-16 -right-10 text-[220px] sm:text-[300px] font-extrabold leading-none text-white/[0.04] select-none"
+          aria-hidden="true"
+        >
+          IX
+        </span>
+      </div>
+    );
+  }
+
+  const Icon = GROUP_ICONS[category?.group] || Trophy;
+  const gradient =
+    BANNER_GRADIENTS[category?.group] || "from-ink-900 to-ink-950";
+
+  return (
+    <div
+      className={`absolute inset-0 bg-gradient-to-br ${gradient} overflow-hidden`}
+    >
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.06]"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="hero-dots-category"
+            width="26"
+            height="26"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="1.3" cy="1.3" r="1.3" fill="#ffffff" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hero-dots-category)" />
+      </svg>
+      <Icon
+        size={220}
+        strokeWidth={1}
+        className="absolute -right-14 -bottom-20 text-white/[0.07] rotate-[-10deg]"
+      />
+    </div>
+  );
+}
+
 function MetaItem({ icon: Icon, label, value }) {
   return (
     <div className="flex items-center gap-2">
-      <div className="w-8 h-8 rounded-lg bg-gold-50 flex items-center justify-center flex-shrink-0">
-        <Icon size={14} className="text-gold-600" />
+      <div className="w-8 h-8 rounded-lg bg-ember-50 flex items-center justify-center flex-shrink-0">
+        <Icon size={14} className="text-ember-600" />
       </div>
       <div className="leading-tight">
-        <p className="text-2xs text-gray-400 font-medium">{label}</p>
-        <p className="text-xs font-semibold text-gray-800">{value}</p>
+        <p className="text-2xs text-zinc-400 font-medium">{label}</p>
+        <p className="text-xs font-semibold text-zinc-800">{value}</p>
       </div>
     </div>
   );
 }
 
-/** Matches the gold-accented pagination used on the Events list page. */
 function Pagination({ currentPage, totalPages, onPageChange }) {
   const getPageNumbers = () => {
     const delta = 1;
@@ -349,7 +434,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 text-gray-500 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronLeft size={16} />
       </button>
@@ -357,7 +442,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         page === "..." ? (
           <span
             key={`dots-${idx}`}
-            className="w-9 h-9 flex items-center justify-center text-gray-300 text-sm select-none"
+            className="w-9 h-9 flex items-center justify-center text-zinc-300 text-sm select-none"
           >
             …
           </span>
@@ -366,10 +451,10 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
             key={page}
             onClick={() => onPageChange(page)}
             aria-current={page === currentPage ? "page" : undefined}
-            className={`w-9 h-9 rounded-xl text-sm font-medium border transition-all ${
+            className={`w-9 h-9 rounded-full text-sm font-medium border transition-all ${
               page === currentPage
-                ? "bg-gold-500 text-white border-gold-500 shadow-sm"
-                : "bg-white text-gray-600 border-gray-200 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50"
+                ? "bg-ember-500 text-white border-ember-500 shadow-sm"
+                : "bg-white text-zinc-600 border-zinc-200 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50"
             }`}
           >
             {page}
@@ -380,7 +465,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 text-gray-500 hover:border-gold-300 hover:text-gold-600 hover:bg-gold-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-ember-300 hover:text-ember-600 hover:bg-ember-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronRight size={16} />
       </button>
@@ -412,6 +497,7 @@ function CandidateCard({
     .map((w) => w[0]?.toUpperCase())
     .join("");
 
+  const hasVotes = (candidate.totalVotes || 0) > 0;
   const showPhoto = candidate.photo && !imgError;
 
   return (
@@ -423,11 +509,11 @@ function CandidateCard({
           : "pointer-events-none opacity-80"
       } ${
         isLeader
-          ? "border-2 border-gold-400 shadow-[0_4px_20px_rgba(245,158,11,0.18)]"
-          : "border border-gray-100 shadow-card"
+          ? "border-2 border-ember-400 shadow-[0_4px_20px_rgba(217,164,65,0.18)]"
+          : "border border-zinc-100 shadow-card"
       }`}
     >
-      <div className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+      <div className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200">
         {showPhoto ? (
           <img
             src={candidate.photo}
@@ -439,27 +525,28 @@ function CandidateCard({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <div className="w-13 h-13 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
+            <div className="w-13 h-13 rounded-full bg-gradient-to-br from-ember-400 to-ember-600 flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
               {initials || <Crown size={22} />}
             </div>
           </div>
         )}
 
         <div className="absolute top-2 left-2">
-          {rank <= 3 ? (
-            <span className="text-xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-              {MEDALS[rank - 1]}
-            </span>
-          ) : (
-            <span className="w-6 h-6 rounded-full bg-white/90 backdrop-blur-sm text-2xs font-extrabold text-gray-700 flex items-center justify-center shadow-sm">
-              {rank}
-            </span>
-          )}
+          {hasVotes &&
+            (rank <= 3 ? (
+              <span className="text-xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                {MEDALS[rank - 1]}
+              </span>
+            ) : (
+              <span className="w-6 h-6 rounded-full bg-white/90 backdrop-blur-sm text-2xs font-extrabold text-zinc-700 flex items-center justify-center shadow-sm">
+                {rank}
+              </span>
+            ))}
         </div>
 
         <div className="absolute top-2 right-2 max-w-[45%] px-1.5 py-0.5 rounded-full bg-black/60 backdrop-blur-sm text-white text-[9px] font-bold truncate">
           {candidate.candidateCode ||
-            "FASA-" + String(candidate.candidateNumber).padStart(4, "0")}
+            "IX-" + String(candidate.candidateNumber).padStart(4, "0")}
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 pt-8 pb-2.5 px-2.5 bg-gradient-to-t from-black/85 via-black/35 to-transparent">
@@ -476,26 +563,26 @@ function CandidateCard({
 
       <div className="px-2.5 pt-2.5 pb-3">
         <div className="flex items-center justify-end mb-1.5">
-          <span className="text-xs font-bold text-gold-600">{sharePct}%</span>
+          <span className="text-xs font-bold text-ember-600">{sharePct}%</span>
         </div>
 
-        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2">
+        <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-2">
           <div
             className={`h-full rounded-full transition-all duration-700 ease-out ${
               isLeader
-                ? "bg-gradient-to-r from-gold-400 to-gold-600"
-                : "bg-gradient-to-r from-gray-300 to-gray-400"
+                ? "bg-gradient-to-r from-ember-400 to-ember-600"
+                : "bg-gradient-to-r from-zinc-300 to-zinc-400"
             }`}
             style={{ width: `${relPct}%` }}
           />
         </div>
 
         {isOpen ? (
-          <p className="text-2xs text-gold-600 font-bold text-right flex items-center justify-end gap-1">
+          <p className="text-2xs text-ember-600 font-bold text-right flex items-center justify-end gap-1">
             Vote <ArrowRight size={11} />
           </p>
         ) : (
-          <p className="text-2xs text-gray-400 text-center">Voting closed</p>
+          <p className="text-2xs text-zinc-400 text-center">Voting closed</p>
         )}
       </div>
     </Link>

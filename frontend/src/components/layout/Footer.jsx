@@ -13,7 +13,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="font-display font-bold text-white text-lg">
-                  FASA Awards
+                  INTREPEDUS Awards
                 </span>
                 <span className="text-gold-400 text-xs ml-2">2026</span>
               </div>
@@ -24,9 +24,18 @@ export default function Footer() {
             </p>
             <div className="flex gap-3 mt-5">
               {[
-                { icon: Instagram, href: "https://instagram.com/fasa_uniben" },
-                { icon: Twitter, href: "https://twitter.com/fassa_uniben" },
-                { icon: Facebook, href: "https://facebook.com/fasa_uniben" },
+                {
+                  icon: Instagram,
+                  href: "https://instagram.com/intrepedus_uniben",
+                },
+                {
+                  icon: Twitter,
+                  href: "https://twitter.com/intrepedus_uniben",
+                },
+                {
+                  icon: Facebook,
+                  href: "https://facebook.com/intrepedus_uniben",
+                },
               ].map(({ icon: Icon, href }) => (
                 <a
                   key={href}
@@ -51,7 +60,7 @@ export default function Footer() {
               {[
                 ["/", "Home"],
                 ["/events", "All events"],
-                ["/about", "About FASA"],
+                ["/about", "About INTREPIDUS"],
                 ["/contact", "Contact"],
                 ["/login", "Admin login"],
               ].map(([to, label]) => (
@@ -97,7 +106,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-          <p>© {new Date().getFullYear()} FASA Awards. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} INTREPIDUS Awards. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
