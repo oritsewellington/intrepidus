@@ -2,7 +2,7 @@ import { Crown, Clock, Mail } from "lucide-react";
 
 export const MAINTENANCE_MODE = true;
 
-const CONTACT_EMAIL = "intrepedus.awards2026@gmail.com";
+const CONTACT_EMAIL = "INTREPIDUS.awards2026@gmail.com";
 
 export default function MaintenanceGate() {
   return (
@@ -33,7 +33,7 @@ export default function MaintenanceGate() {
         </h1>
 
         <p className="text-gray-400 text-sm sm:text-[15px] leading-relaxed mb-2 max-w-sm mx-auto">
-          INTREPEDUS Awards 2026 voting is temporarily paused while we finalize
+          INTREPIDUS Awards 2026 voting is temporarily paused while we finalize
           some administrative arrangements with our event partners.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed mb-10 max-w-sm mx-auto">
@@ -52,7 +52,7 @@ export default function MaintenanceGate() {
         )}
 
         <p className="text-gray-600 text-xs mt-10">
-          INTREPEDUS — Faculty of Arts Students' Association · University of
+          INTREPIDUS — Faculty of Arts Students' Association · University of
           Benin
         </p>
       </div>

@@ -202,7 +202,7 @@ export default function EventFormModal({ open, onClose, event }) {
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className="input-field"
-            placeholder="e.g. Most Popular INTREPEDUS (Male) 2026"
+            placeholder="e.g. Most Popular INTREPIDUS (Male) 2026"
             required
           />
         </div>

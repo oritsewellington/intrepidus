@@ -13,7 +13,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="font-display font-bold text-white text-lg">
-                  INTREPEDUS Awards
+                  INTREPIDUS Awards
                 </span>
                 <span className="text-gold-400 text-xs ml-2">2026</span>
               </div>
@@ -26,15 +26,15 @@ export default function Footer() {
               {[
                 {
                   icon: Instagram,
-                  href: "https://instagram.com/intrepedus_uniben",
+                  href: "https://instagram.com/intrepidus_uniben",
                 },
                 {
                   icon: Twitter,
-                  href: "https://twitter.com/intrepedus_uniben",
+                  href: "https://twitter.com/intrepidus_uniben",
                 },
                 {
                   icon: Facebook,
-                  href: "https://facebook.com/intrepedus_uniben",
+                  href: "https://facebook.com/intrepidus_uniben",
                 },
               ].map(({ icon: Icon, href }) => (
                 <a

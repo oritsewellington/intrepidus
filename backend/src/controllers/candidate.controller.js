@@ -94,7 +94,7 @@ export async function updateCandidate(req, res) {
         await deleteFromCloudinary(candidate.photoPublicId);
 
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: "intrepedus/candidates",
+        folder: "intrepidus/candidates",
         width: 600,
         height: 750,
       });
