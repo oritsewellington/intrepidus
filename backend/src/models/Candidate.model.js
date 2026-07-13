@@ -6,12 +6,11 @@ const candidateSchema = new mongoose.Schema(
     department: { type: String, default: "" },
     level: { type: String, default: "" },
 
-    // Auto-generated unique candidate number per event: FASA-XXXX
     candidateNumber: { type: Number, required: true },
-    candidateCode: { type: String, default: "" }, // e.g. "FASA-0001"
+    candidateCode: { type: String, default: "" },
 
-    photo: { type: String, default: "" }, // now the Cloudinary secure_url
-    photoPublicId: { type: String, default: "" }, // was photoFilename — needed to delete/replace
+    photo: { type: String, default: "" },
+    photoPublicId: { type: String, default: "" },
 
     event: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +30,7 @@ candidateSchema.index({ event: 1, candidateNumber: 1 }, { unique: true });
 candidateSchema.pre("save", function (next) {
   if (!this.candidateCode) {
     this.candidateCode =
-      "FASA-" + String(this.candidateNumber).padStart(4, "0");
+      "INTREPIDUS-" + String(this.candidateNumber).padStart(4, "0");
   }
   next();
 });

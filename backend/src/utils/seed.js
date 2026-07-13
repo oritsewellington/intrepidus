@@ -10,250 +10,117 @@ const SEED_USERS = [
   {
     name: "Zondo",
     email: "zondo@gmail.com",
-    password: "zondo2031",
+    password: "intrepidus2031",
     role: "admin",
   },
   {
-    name: "Fasan Staff 1",
-    email: "fasan1@gmail.com",
-    password: "fasan2031",
+    name: "Intrepidus Staff 1",
+    email: "intrepidus1@gmail.com",
+    password: "intrepidus2031",
     role: "staff",
   },
   {
-    name: "Fasan Staff 2",
-    email: "fasan@gmail.com",
-    password: "fasan2031",
+    name: "Intrepidus Staff 2",
+    email: "intrepidus2@gmail.com",
+    password: "intrepidus2031",
     role: "staff",
   },
 ];
 
-const ORGANIZATION_NAME = "FASA — Faculty of Arts Students' Association";
+const ORGANIZATION_NAME = "Class of INTREPIDUS";
 const PRICE_PER_VOTE_KOBO = 10000;
 
 const SEED_CATEGORIES = [
   {
-    name: "Most Handsome FASA",
-    group: "Popularity",
-    emoji: "😎",
-    description:
-      "Honors the male student whose style, grooming, and overall presence have made him stand out across the faculty this academic year.",
-  },
-  {
-    name: "Most Beautiful FASA",
-    group: "Popularity",
-    emoji: "💃",
-    description:
-      "Celebrates the female student recognized by her peers for her elegance, confidence, and standout presence on campus.",
-  },
-  {
-    name: "Most Popular FASA (Male)",
-    group: "Popularity",
-    emoji: "⭐",
-    description:
-      "Awarded to the male student with the widest recognition and following across departments, known by name throughout the faculty.",
-  },
-  {
-    name: "Most Popular FASA (Female)",
-    group: "Popularity",
-    emoji: "⭐",
-    description:
-      "Awarded to the female student with the widest recognition and following across departments, known by name throughout the faculty.",
-  },
-  {
-    name: "Most Social Male",
-    group: "Social",
-    emoji: "🤝",
-    description:
-      "Recognizes the male student whose warmth, approachability, and active presence at events have made him a fixture of campus social life.",
-  },
-  {
-    name: "Most Social Female",
-    group: "Social",
-    emoji: "🤝",
-    description:
-      "Recognizes the female student whose warmth, approachability, and active presence at events have made her a fixture of campus social life.",
-  },
-  {
-    name: "Most Influential FASA (Male)",
-    group: "Leadership",
-    emoji: "👑",
-    description:
-      "Honors the male student whose opinions, actions, and initiatives have meaningfully shaped conversations and decisions within the faculty.",
-  },
-  {
-    name: "Most Influential FASA (Female)",
-    group: "Leadership",
-    emoji: "👑",
-    description:
-      "Honors the female student whose opinions, actions, and initiatives have meaningfully shaped conversations and decisions within the faculty.",
-  },
-  {
-    name: "Fashion Icon of the Year (Male)",
-    group: "Fashion",
-    emoji: "👔",
-    description:
-      "Celebrates the male student whose personal style consistently sets trends and inspires others across campus.",
-  },
-  {
-    name: "Fashion Icon of the Year (Female)",
-    group: "Fashion",
-    emoji: "👗",
-    description:
-      "Celebrates the female student whose personal style consistently sets trends and inspires others across campus.",
-  },
-  {
-    name: "Clique of the Year",
-    group: "Social",
-    emoji: "👯",
-    description:
-      "Recognizes the friend group or squad best known across the faculty for their bond, visibility, and positive presence at events.",
-  },
-  {
-    name: "Most Creative FASA",
+    name: "Most Creative Student",
     group: "Creative",
     emoji: "🎨",
     description:
-      "Awarded to the student whose original ideas and artistic expression have brought fresh creativity to faculty life.",
+      "Awarded to the student whose imagination and originality consistently stand out — from bold ideas to fearless artistic expression that pushes the class forward.",
   },
   {
-    name: "Most Talented FASA",
-    group: "Creative",
-    emoji: "🎵",
+    name: "Most Influential Student",
+    group: "Leadership",
+    emoji: "👑",
     description:
-      "Honors the all-round student whose skill in performance, craft, or art form has impressed audiences within and beyond the faculty.",
+      "Honors the student whose voice and actions carry real weight — someone whose opinions shape conversations and whose lead others are quick to follow.",
   },
   {
-    name: "Content Creator of the Year",
-    group: "Creative",
-    emoji: "🎥",
+    name: "Class Icon",
+    group: "Popularity",
+    emoji: "⭐",
     description:
-      "Recognizes the student producing the most engaging and consistent content online, representing the faculty's voice on social media.",
+      "The class's defining personality — the student whose presence, charm, and energy make them instantly recognizable and impossible to forget.",
   },
   {
-    name: "Artist of the Year",
-    group: "Creative",
-    emoji: "🎤",
+    name: "Best Dressed Male",
+    group: "Fashion",
+    emoji: "👔",
     description:
-      "Celebrates the student whose musical or performing talent has earned recognition through live performances or original work.",
+      "Celebrates the male student whose style is sharp, deliberate, and always on point — setting the standard the rest of the class watches closely.",
   },
   {
-    name: "Brand of the Year",
-    group: "Business",
-    emoji: "🏅",
+    name: "Best Dressed Female",
+    group: "Fashion",
+    emoji: "👗",
     description:
-      "Honors the student-run brand or business that has shown the strongest growth, quality, and recognition within the academic year.",
+      "Celebrates the female student whose fashion sense is effortless yet unmistakable — a signature style that turns heads every time.",
   },
   {
-    name: "Entrepreneur of the Year",
+    name: "Most Social Student",
+    group: "Social",
+    emoji: "🤝",
+    description:
+      "Recognizes the student who's always in the mix — warm, connected, and at the center of nearly every gathering, conversation, and plan.",
+  },
+  {
+    name: "Most Enterprising Student",
     group: "Business",
     emoji: "⚡",
     description:
-      "Recognizes the student entrepreneur who has demonstrated innovation, resilience, and measurable success in building a venture.",
+      "Honors the student building something real — a hustler with vision, drive, and the resourcefulness to turn ideas into opportunity.",
   },
   {
-    name: "Course Representative of the Year",
-    group: "Leadership",
-    emoji: "📚",
+    name: "Most Talented Student",
+    group: "Creative",
+    emoji: "🎤",
     description:
-      "Awarded to the course representative who has gone beyond the call of duty in serving, organizing, and advocating for their classmates.",
+      "Awarded to the all-round performer whose skill — on stage, on paper, or off the cuff — consistently leaves an impression.",
   },
   {
-    name: "Senator of the Year",
-    group: "Leadership",
-    emoji: "🏛️",
-    description:
-      "Honors the student senator whose representation and legislative contributions have had the greatest positive impact on student affairs.",
-  },
-  {
-    name: "Parliamentarian of the Year",
-    group: "Leadership",
-    emoji: "⚖️",
-    description:
-      "Recognizes the parliamentarian whose diligence, fairness, and procedural leadership strengthened faculty governance this year.",
-  },
-  {
-    name: "Departmental President of the Year",
-    group: "Leadership",
-    emoji: "🏛️",
-    description:
-      "Celebrates the departmental president whose leadership delivered the most impactful initiatives and unity within their department.",
-  },
-  {
-    name: "Executive of the Year",
-    group: "Business",
-    emoji: "💼",
-    description:
-      "Honors the student association executive whose management, vision, and execution stood out across the faculty's organizational bodies.",
-  },
-  {
-    name: "Political Personality of the Year (Male)",
-    group: "Leadership",
-    emoji: "🏳️",
-    description:
-      "Recognizes the male student whose involvement in campus politics has shown integrity, vision, and measurable impact on student governance.",
-  },
-  {
-    name: "Political Personality of the Year (Female)",
-    group: "Leadership",
-    emoji: "🏳️",
-    description:
-      "Recognizes the female student whose involvement in campus politics has shown integrity, vision, and measurable impact on student governance.",
-  },
-  {
-    name: "Academic Excellence Award (Male)",
-    group: "Academic",
-    emoji: "📖",
-    description:
-      "Awarded to the male student with an outstanding academic record, recognizing consistent excellence in scholarship and performance.",
-  },
-  {
-    name: "Academic Excellence Award (Female)",
-    group: "Academic",
-    emoji: "📖",
-    description:
-      "Awarded to the female student with an outstanding academic record, recognizing consistent excellence in scholarship and performance.",
-  },
-  {
-    name: "Sportsman of the Year",
-    group: "Sports",
-    emoji: "🏆",
-    description:
-      "Honors the male student-athlete whose performance, sportsmanship, and dedication brought distinction to the faculty in sporting competitions.",
-  },
-  {
-    name: "Sportswoman of the Year",
-    group: "Sports",
-    emoji: "🏆",
-    description:
-      "Honors the female student-athlete whose performance, sportsmanship, and dedication brought distinction to the faculty in sporting competitions.",
-  },
-  {
-    name: "Most Active Fresher",
-    group: "General",
-    emoji: "✨",
-    description:
-      "Celebrates the first-year student who has made the strongest early impression through participation, energy, and visibility on campus.",
-  },
-  {
-    name: "Department of the Year",
-    group: "General",
-    emoji: "🏢",
-    description:
-      "Recognizes the department that has demonstrated the strongest unity, achievement, and overall excellence across the academic year.",
-  },
-  {
-    name: "Miss FASA",
+    name: "Miss INTREPIDUS",
     group: "Popularity",
     emoji: "👸",
     description:
-      "The faculty's top honor for a female student, recognizing the complete package of grace, intelligence, and influence.",
+      "The class's highest honor for a female student — recognizing the complete package of confidence, grace, and undeniable presence.",
   },
   {
-    name: "Mr. FASA",
+    name: "Mr INTREPIDUS",
     group: "Popularity",
     emoji: "🤵",
     description:
-      "The faculty's top honor for a male student, recognizing the complete package of character, achievement, and influence.",
+      "The class's highest honor for a male student — recognizing the complete package of character, drive, and undeniable presence.",
+  },
+  {
+    name: "Best Student Politician",
+    group: "Leadership",
+    emoji: "🏛️",
+    description:
+      "Recognizes the student whose leadership in governance and advocacy has shown genuine vision, integrity, and measurable impact.",
+  },
+  {
+    name: "Most Charismatic Student",
+    group: "Popularity",
+    emoji: "✨",
+    description:
+      "Honors the student with the natural magnetism to light up any room — effortlessly likable, quotable, and impossible to ignore.",
+  },
+  {
+    name: "Award for Academic Excellence",
+    group: "Academic",
+    emoji: "📖",
+    description:
+      "Celebrates the student whose consistent academic performance sets the bar — proof that brilliance and discipline go hand in hand.",
   },
 ];
 
