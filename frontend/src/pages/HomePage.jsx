@@ -176,7 +176,7 @@ export default function HomePage() {
 
   const topStandings = useMemo(() => {
     return polls
-      .filter((p) => p.leaderName && p.totalVotes > 0)
+      .filter((p) => p.leaderName && p.leaderVotes > 0)
       .map((p) => ({
         ...p,
         percent:
@@ -386,15 +386,15 @@ export default function HomePage() {
                     <div className="absolute inset-4 rounded-full border border-amber-400/25" />
                     <div className="absolute inset-8 rounded-full border border-white/10" />
 
-                    <div className="relative text-center px-4">
+                    <div className="relative text-center px-5">
                       <span
                         style={HEADING_FONT}
-                        className="block text-transparent bg-clip-text bg-gradient-to-br from-amber-300 via-amber-400 to-indigo-400 text-6xl sm:text-7xl font-extrabold tracking-tight leading-none"
+                        className="block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-br from-amber-300 via-amber-400 to-indigo-400 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-none"
                       >
-                        IX
+                        INTREPIDUS
                       </span>
                       <span className="block mt-2 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase text-zinc-400">
-                        Awards · 2026
+                        Class of 2026
                       </span>
                     </div>
 
@@ -506,55 +506,65 @@ export default function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {topStandings.map((poll) => (
-                  <Link
-                    key={poll.eventId}
-                    to={`/events/${poll.eventId}/results`}
-                    className="group rounded-3xl bg-white border border-zinc-100 p-5 shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] hover:shadow-[0_25px_60px_-15px_rgba(76,95,217,0.2)] hover:-translate-y-1 transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-3">
-                      <p className="text-xs text-zinc-400">
-                        {poll.category || "Uncategorized"}
-                      </p>
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">
-                        <Trophy size={10} />
-                      </span>
-                    </div>
+                {topStandings.map((poll) => {
+                  const hasRealLeader = poll.leaderName && poll.leaderVotes > 0;
 
-                    <h3 className="font-semibold text-zinc-900 text-sm leading-snug mb-1 group-hover:text-amber-700 transition-colors truncate">
-                      {poll.eventTitle}
-                    </h3>
-
-                    <p className="text-xs text-zinc-500 mb-3">
-                      Leading:{" "}
-                      <span className="font-semibold text-zinc-800">
-                        {poll.leaderName}
-                      </span>
-                    </p>
-
-                    {poll.percent != null && (
-                      <>
-                        <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-1.5">
-                          <div
-                            className="h-full bg-gradient-to-r from-amber-400 to-indigo-500 rounded-full transition-all"
-                            style={{
-                              width: `${Math.min(poll.percent, 100)}%`,
-                            }}
-                          />
-                        </div>
-                        <p className="text-xs font-bold text-amber-600">
-                          {poll.percent.toFixed(1)}% of votes
+                  return (
+                    <Link
+                      key={poll.eventId}
+                      to={`/events/${poll.eventId}/results`}
+                      className="group rounded-3xl bg-white border border-zinc-100 p-5 shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] hover:shadow-[0_25px_60px_-15px_rgba(76,95,217,0.2)] hover:-translate-y-1 transition-all duration-300"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-3">
+                        <p className="text-xs text-zinc-400">
+                          {poll.category || "Uncategorized"}
                         </p>
-                      </>
-                    )}
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">
+                          <Trophy size={10} />
+                        </span>
+                      </div>
 
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-50">
-                      <span className="text-xs font-semibold text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
-                        View standings <ChevronRight size={12} />
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                      <h3 className="font-semibold text-zinc-900 text-sm leading-snug mb-1 group-hover:text-amber-700 transition-colors truncate">
+                        {poll.eventTitle}
+                      </h3>
+
+                      {hasRealLeader ? (
+                        <p className="text-xs text-zinc-500 mb-3">
+                          Leading:{" "}
+                          <span className="font-semibold text-zinc-800">
+                            {poll.leaderName}
+                          </span>
+                        </p>
+                      ) : (
+                        <p className="text-xs text-zinc-400 mb-3 italic">
+                          No votes yet
+                        </p>
+                      )}
+
+                      {hasRealLeader && poll.percent != null && (
+                        <>
+                          <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-1.5">
+                            <div
+                              className="h-full bg-gradient-to-r from-amber-400 to-indigo-500 rounded-full transition-all"
+                              style={{
+                                width: `${Math.min(poll.percent, 100)}%`,
+                              }}
+                            />
+                          </div>
+                          <p className="text-xs font-bold text-amber-600">
+                            {poll.percent.toFixed(1)}% of votes
+                          </p>
+                        </>
+                      )}
+
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-50">
+                        <span className="text-xs font-semibold text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          View standings <ChevronRight size={12} />
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>

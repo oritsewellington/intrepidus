@@ -3,7 +3,7 @@ import Candidate from "../models/Candidate.model.js";
 import Vote from "../models/Vote.model.js";
 import User from "../models/User.model.js";
 
-const PLATFORM_COMMISSION = parseFloat(process.env.PLATFORM_COMMISSION) || 0.1;
+const PLATFORM_COMMISSION = parseFloat(process.env.PLATFORM_COMMISSION) || 0.08;
 
 export async function getAdminStats(req, res) {
   try {

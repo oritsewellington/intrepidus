@@ -62,7 +62,7 @@ export default function OrganizerOverviewPage() {
           icon={DollarSign}
         />
         <StatCard
-          label={`Platform Earnings (${((stats?.platformCommission || 0.1) * 100).toFixed(0)}%)`}
+          label={`Platform Earnings (${((stats?.platformCommission || 0.8) * 100).toFixed(0)}%)`}
           value={formatNaira(stats?.platformEarnings || 0)}
           icon={TrendingUp}
           colorClass="text-gold-600"
