@@ -7,7 +7,9 @@
     "start": "node src/index.js",
     "seed": "node src/utils/seed.js",
     "candidate": "node src/utils/seedCandidates.js",
-    "repair": "node src/utils/repairCandidateVotes.js"
+    "repair": "node src/utils/repairCandidateVotes.js",
+    "event": "node src/utils/repairEventTotals.js",
+    "verifyPaystack": "node src/utils/reconcileVerifiedVotes.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
