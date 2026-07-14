@@ -25,20 +25,21 @@ export default function MaintenanceGate() {
 
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gold-500/10 border border-gold-500/25 rounded-full text-gold-300 text-xs font-bold tracking-widest uppercase mb-6">
           <Clock size={12} />
-          Temporarily Unavailable
+          Under Maintenance
         </div>
 
         <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white leading-snug mb-4">
-          We'll be right back
+          Improving your experience
         </h1>
 
-        <p className="text-gray-400 text-sm sm:text-[15px] leading-relaxed mb-2 max-w-sm mx-auto">
-          INTREPIDUS Awards 2026 voting is temporarily paused while we finalize
-          some administrative arrangements with our event partners.
+        <p className="text-gray-400 text-sm sm:text-[15px] leading-relaxed mb-4 max-w-sm mx-auto">
+          We are currently performing routine maintenance and fixing minor bugs
+          on the platform to ensure everything runs smoothly.
         </p>
         <p className="text-gray-500 text-sm leading-relaxed mb-10 max-w-sm mx-auto">
-          We appreciate your patience and expect to be back online shortly. No
-          action is needed from you in the meantime.
+          Please hold on and check back shortly. We sincerely apologize for any
+          inconvenience this temporary downtime may cause and appreciate your
+          patience!
         </p>
 
         {CONTACT_EMAIL && (
@@ -52,8 +53,7 @@ export default function MaintenanceGate() {
         )}
 
         <p className="text-gray-600 text-xs mt-10">
-          INTREPIDUS — Faculty of Arts Students' Association · University of
-          Benin
+          INTREPIDUS 2026 · University of Benin
         </p>
       </div>
     </div>
