@@ -7,29 +7,33 @@ import Vote from "../models/Vote.model.js";
 dotenv.config();
 
 const PAYSTACK_BASE = "https://api.paystack.co";
+
 const paystackHeaders = () => ({
   Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
   "Content-Type": "application/json",
 });
 
-// Small delay so we don't hammer Paystack's API / hit rate limits.
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function reconcile() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
+
     console.log("Connected to MongoDB\n");
 
-    const verifiedVotes = await Vote.find({ status: "verified" }).sort(
-      "createdAt",
-    );
+    const verifiedVotes = await Vote.find({
+      status: "verified",
+    }).sort("createdAt");
+
     console.log(
       `Checking ${verifiedVotes.length} verified vote(s) against Paystack...\n`,
     );
 
     const problems = [];
+
     let dbTotal = 0;
     let confirmedTotal = 0;
+    let repairedCount = 0;
 
     for (const vote of verifiedVotes) {
       dbTotal += vote.amount;
@@ -37,46 +41,83 @@ async function reconcile() {
       try {
         const { data } = await axios.get(
           `${PAYSTACK_BASE}/transaction/verify/${vote.reference}`,
-          { headers: paystackHeaders(), timeout: 10000 },
+          {
+            headers: paystackHeaders(),
+            timeout: 10000,
+          },
         );
 
         const real = data?.data;
         const realStatus = real?.status;
         const realAmount = real?.amount;
 
+        // Payment not actually successful
         if (!data.status || realStatus !== "success") {
+          await Vote.findByIdAndUpdate(vote._id, {
+            status: "failed",
+          });
+
+          repairedCount++;
+
+          console.log(
+            `✔ Marked ${vote.reference} as FAILED (Paystack status: ${realStatus})`,
+          );
+
           problems.push({
             voteId: vote._id,
             reference: vote.reference,
-            issue: `Paystack status is "${realStatus}", not "success"`,
+            issue: `Paystack status is "${realStatus}"`,
             dbAmount: vote.amount,
             paystackAmount: realAmount ?? "N/A",
             voterEmail: vote.voterEmail,
             candidateName: vote.candidateName,
           });
-        } else if (realAmount !== vote.amount) {
+
+          continue;
+        }
+
+        // Successful payment but amount differs
+        if (realAmount !== vote.amount) {
+          await Vote.findByIdAndUpdate(vote._id, {
+            status: "failed",
+          });
+
+          repairedCount++;
+
+          console.log(`✔ Marked ${vote.reference} as FAILED (Amount mismatch)`);
+
           problems.push({
             voteId: vote._id,
             reference: vote.reference,
-            issue: "Amount mismatch between DB and Paystack",
+            issue: "Amount mismatch",
             dbAmount: vote.amount,
             paystackAmount: realAmount,
             voterEmail: vote.voterEmail,
             candidateName: vote.candidateName,
           });
-        } else {
-          confirmedTotal += vote.amount;
+
+          continue;
         }
+
+        confirmedTotal += vote.amount;
       } catch (err) {
-        // 404 from Paystack means the reference simply doesn't exist there
-        const status = err.response?.status;
+        await Vote.findByIdAndUpdate(vote._id, {
+          status: "failed",
+        });
+
+        repairedCount++;
+
+        console.log(
+          `✔ Marked ${vote.reference} as FAILED (Could not verify with Paystack)`,
+        );
+
         problems.push({
           voteId: vote._id,
           reference: vote.reference,
           issue:
-            status === 404
-              ? "Reference does not exist on Paystack at all"
-              : `Error checking Paystack: ${err.message}`,
+            err.response?.data?.message ||
+            err.response?.statusText ||
+            err.message,
           dbAmount: vote.amount,
           paystackAmount: "N/A",
           voterEmail: vote.voterEmail,
@@ -84,43 +125,46 @@ async function reconcile() {
         });
       }
 
-      await sleep(150); // stay well under Paystack's rate limits
+      await sleep(150);
     }
 
-    console.log("========== SUMMARY ==========");
-    console.log(`Total votes checked:        ${verifiedVotes.length}`);
-    console.log(`DB total (verified, kobo):  ${dbTotal}  (₦${dbTotal / 100})`);
-    console.log(
-      `Confirmed-good total (kobo):${confirmedTotal}  (₦${confirmedTotal / 100})`,
-    );
-    console.log(`Problem records found:      ${problems.length}`);
-    console.log("==============================\n");
+    console.log("\n========== SUMMARY ==========");
+    console.log(`Verified votes checked:     ${verifiedVotes.length}`);
+    console.log(`Confirmed good:             ₦${confirmedTotal / 100}`);
+    console.log(`Database total:             ₦${dbTotal / 100}`);
+    console.log(`Votes repaired:             ${repairedCount}`);
+    console.log(`Problem records:            ${problems.length}`);
+    console.log("=============================\n");
 
-    if (problems.length > 0) {
-      console.log(
-        "PROBLEM RECORDS (these are inflating your DB revenue/votes):\n",
-      );
+    if (problems.length) {
+      console.log("Problem records:\n");
+
       problems.forEach((p) => {
         console.log("----------------------------------------");
-        console.log(`voteId:          ${p.voteId}`);
-        console.log(`reference:       ${p.reference}`);
-        console.log(`issue:           ${p.issue}`);
-        console.log(`DB amount:       ₦${p.dbAmount / 100}`);
+        console.log(`Vote ID:          ${p.voteId}`);
+        console.log(`Reference:        ${p.reference}`);
+        console.log(`Issue:            ${p.issue}`);
+        console.log(`DB Amount:        ₦${p.dbAmount / 100}`);
         console.log(
-          `Paystack amount: ${p.paystackAmount === "N/A" ? "N/A" : "₦" + p.paystackAmount / 100}`,
+          `Paystack Amount:  ${
+            p.paystackAmount === "N/A" ? "N/A" : "₦" + p.paystackAmount / 100
+          }`,
         );
-        console.log(`voterEmail:      ${p.voterEmail}`);
-        console.log(`candidateName:   ${p.candidateName}`);
+        console.log(`Candidate:        ${p.candidateName}`);
+        console.log(`Email:            ${p.voterEmail}`);
       });
+
       console.log("----------------------------------------");
-      console.log(
-        "\nReview each of these, then mark confirmed-bad ones as status: 'failed' and re-run your repair scripts.",
-      );
     } else {
-      console.log(
-        "All verified votes match Paystack exactly. No issues found.",
-      );
+      console.log("Everything matches Paystack.");
     }
+
+    console.log(
+      "\nNext step:\n" +
+        "1. Run repairCandidateVotes.js\n" +
+        "2. Run repairEventVotes.js\n" +
+        "3. Candidate/Event totals will now match Paystack.",
+    );
 
     process.exit(0);
   } catch (err) {
