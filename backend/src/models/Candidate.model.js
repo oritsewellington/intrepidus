@@ -30,7 +30,7 @@ candidateSchema.index({ event: 1, candidateNumber: 1 }, { unique: true });
 candidateSchema.pre("save", function (next) {
   if (!this.candidateCode) {
     this.candidateCode =
-      "INTREPIDUS-" + String(this.candidateNumber).padStart(4, "0");
+      "TASA-" + String(this.candidateNumber).padStart(4, "0");
   }
   next();
 });

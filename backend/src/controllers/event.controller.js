@@ -64,7 +64,7 @@ export async function createEvent(req, res) {
       bannerPublicId = "";
     if (req.file) {
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: "intrepidus/banners",
+        folder: "tasa/banners",
         width: 1200,
         height: 630,
       });
@@ -130,7 +130,7 @@ export async function updateEvent(req, res) {
         await deleteFromCloudinary(event.bannerPublicId);
 
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: "intrepidus/banners",
+        folder: "tasa/banners",
         width: 1200,
         height: 630,
       });

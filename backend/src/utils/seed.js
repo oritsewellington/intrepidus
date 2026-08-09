@@ -10,117 +10,191 @@ const SEED_USERS = [
   {
     name: "Zondo",
     email: "zondo@gmail.com",
-    password: "intrepidus2031",
+    password: "tasa2031",
     role: "admin",
   },
   {
-    name: "Intrepidus Staff 1",
-    email: "intrepidus1@gmail.com",
-    password: "intrepidus2031",
+    name: "tasa Staff 1",
+    email: "tasa1@gmail.com",
+    password: "tasa2031",
     role: "staff",
   },
   {
-    name: "Intrepidus Staff 2",
-    email: "intrepidus2@gmail.com",
-    password: "intrepidus2031",
+    name: "tasa Staff 2",
+    email: "tasa2@gmail.com",
+    password: "tasa2031",
     role: "staff",
   },
 ];
 
-const ORGANIZATION_NAME = "Class of INTREPIDUS";
+// Updated to reflect the real organization behind these awards — the
+// previous "Class of TASA" categories were a generic class-awards
+// template, not specific to Theatre Arts. This seed replaces them with
+// the department's actual award categories.
+const ORGANIZATION_NAME = "Theatre Arts Student Association (TASA)";
 const PRICE_PER_VOTE_KOBO = 10000;
 
 const SEED_CATEGORIES = [
   {
-    name: "Most Creative Student",
+    name: "Best Actor (Male)",
     group: "Creative",
-    emoji: "🎨",
+    emoji: "🎭",
     description:
-      "Awarded to the student whose imagination and originality consistently stand out — from bold ideas to fearless artistic expression that pushes the class forward.",
+      "Honors the performer whose command of character, voice, and stage presence brought a role fully to life this season.",
   },
   {
-    name: "Most Influential Student",
-    group: "Leadership",
-    emoji: "👑",
-    description:
-      "Honors the student whose voice and actions carry real weight — someone whose opinions shape conversations and whose lead others are quick to follow.",
-  },
-  {
-    name: "Class Icon",
-    group: "Popularity",
-    emoji: "⭐",
-    description:
-      "The class's defining personality — the student whose presence, charm, and energy make them instantly recognizable and impossible to forget.",
-  },
-  {
-    name: "Best Dressed Male",
-    group: "Fashion",
-    emoji: "👔",
-    description:
-      "Celebrates the male student whose style is sharp, deliberate, and always on point — setting the standard the rest of the class watches closely.",
-  },
-  {
-    name: "Best Dressed Female",
-    group: "Fashion",
-    emoji: "👗",
-    description:
-      "Celebrates the female student whose fashion sense is effortless yet unmistakable — a signature style that turns heads every time.",
-  },
-  {
-    name: "Most Social Student",
-    group: "Social",
-    emoji: "🤝",
-    description:
-      "Recognizes the student who's always in the mix — warm, connected, and at the center of nearly every gathering, conversation, and plan.",
-  },
-  {
-    name: "Most Enterprising Student",
-    group: "Business",
-    emoji: "⚡",
-    description:
-      "Honors the student building something real — a hustler with vision, drive, and the resourcefulness to turn ideas into opportunity.",
-  },
-  {
-    name: "Most Talented Student",
+    name: "Best Actor (Female)",
     group: "Creative",
-    emoji: "🎤",
+    emoji: "🎭",
     description:
-      "Awarded to the all-round performer whose skill — on stage, on paper, or off the cuff — consistently leaves an impression.",
+      "Honors the performer whose command of character, voice, and stage presence brought a role fully to life this season.",
   },
   {
-    name: "Miss INTREPIDUS",
-    group: "Popularity",
-    emoji: "👸",
+    name: "Best Dancer (Male)",
+    group: "Creative",
+    emoji: "💃",
     description:
-      "The class's highest honor for a female student — recognizing the complete package of confidence, grace, and undeniable presence.",
+      "Celebrates the mover whose discipline, rhythm, and expression turned choreography into genuine storytelling.",
   },
   {
-    name: "Mr INTREPIDUS",
-    group: "Popularity",
-    emoji: "🤵",
+    name: "Best Dancer (Female)",
+    group: "Creative",
+    emoji: "💃",
     description:
-      "The class's highest honor for a male student — recognizing the complete package of character, drive, and undeniable presence.",
+      "Celebrates the mover whose discipline, rhythm, and expression turned choreography into genuine storytelling.",
   },
   {
-    name: "Best Student Politician",
+    name: "Best Director (Male)",
+    group: "Creative",
+    emoji: "🎬",
+    description:
+      "Recognizes the vision behind the production — the eye that shaped performances, pacing, and staging into a unified whole.",
+  },
+  {
+    name: "Best Director (Female)",
+    group: "Creative",
+    emoji: "🎬",
+    description:
+      "Recognizes the vision behind the production — the eye that shaped performances, pacing, and staging into a unified whole.",
+  },
+  {
+    name: "Best Costumier (Male)",
+    group: "Fashion",
+    emoji: "🧵",
+    description:
+      "Honors the craftsperson whose costume design gave every character their silhouette, era, and identity on stage.",
+  },
+  {
+    name: "Best Costumier (Female)",
+    group: "Fashion",
+    emoji: "🧵",
+    description:
+      "Honors the craftsperson whose costume design gave every character their silhouette, era, and identity on stage.",
+  },
+  {
+    name: "Political Guru (Male)",
     group: "Leadership",
     emoji: "🏛️",
     description:
-      "Recognizes the student whose leadership in governance and advocacy has shown genuine vision, integrity, and measurable impact.",
+      "Celebrates the student whose grasp of governance, persuasion, and campus advocacy sets them apart as a natural strategist.",
   },
   {
-    name: "Most Charismatic Student",
-    group: "Popularity",
-    emoji: "✨",
+    name: "Political Guru (Female)",
+    group: "Leadership",
+    emoji: "🏛️",
     description:
-      "Honors the student with the natural magnetism to light up any room — effortlessly likable, quotable, and impossible to ignore.",
+      "Celebrates the student whose grasp of governance, persuasion, and campus advocacy sets them apart as a natural strategist.",
   },
   {
-    name: "Award for Academic Excellence",
-    group: "Academic",
-    emoji: "📖",
+    name: "Sportsman of the Year (Male)",
+    group: "Sports",
+    emoji: "🏅",
     description:
-      "Celebrates the student whose consistent academic performance sets the bar — proof that brilliance and discipline go hand in hand.",
+      "Recognizes outstanding athletic achievement and the discipline it took to get there.",
+  },
+  {
+    name: "Sportsman of the Year (Female)",
+    group: "Sports",
+    emoji: "🏅",
+    description:
+      "Recognizes outstanding athletic achievement and the discipline it took to get there.",
+  },
+  {
+    name: "Most Influential (Male)",
+    group: "Leadership",
+    emoji: "👑",
+    description:
+      "Honors the student whose voice and actions genuinely shape opinion and set the tone for those around them.",
+  },
+  {
+    name: "Most Influential (Female)",
+    group: "Leadership",
+    emoji: "👑",
+    description:
+      "Honors the student whose voice and actions genuinely shape opinion and set the tone for those around them.",
+  },
+  {
+    name: "Best Set Designer",
+    group: "Creative",
+    emoji: "🖌️",
+    description:
+      "Celebrates the eye that builds a world from nothing — the sets, spaces, and visual storytelling behind every production.",
+  },
+  {
+    name: "Best Supporting Actor (Male)",
+    group: "Creative",
+    emoji: "🎗️",
+    description:
+      "Honors the performer whose supporting role elevated every scene they were part of, often without asking for the spotlight.",
+  },
+  {
+    name: "Best Supporting Actor (Female)",
+    group: "Creative",
+    emoji: "🎗️",
+    description:
+      "Honors the performer whose supporting role elevated every scene they were part of, often without asking for the spotlight.",
+  },
+  {
+    name: "Thespian of the Year",
+    group: "Creative",
+    emoji: "🌟",
+    description:
+      "The department's highest individual honor — recognizing complete command of the craft, discipline, and dedication to theatre.",
+  },
+  {
+    name: "Best Stage Manager",
+    group: "Business",
+    emoji: "🎛️",
+    description:
+      "Recognizes the steady hand behind the scenes — the coordination, timing, and calm that keep a production running.",
+  },
+  {
+    name: "Entrepreneur of the Year",
+    group: "Business",
+    emoji: "⚡",
+    description:
+      "Honors the student turning ideas into real ventures — resourcefulness and hustle beyond the classroom.",
+  },
+  {
+    name: "Best Content Creator",
+    group: "Creative",
+    emoji: "📱",
+    description:
+      "Celebrates the storyteller building an audience online — consistent, creative, and impossible to scroll past.",
+  },
+  {
+    name: "Best Drummer",
+    group: "Creative",
+    emoji: "🥁",
+    description:
+      "Recognizes rhythm, timing, and the drive behind every beat that carried a performance.",
+  },
+  {
+    name: "Music Artist of the Year",
+    group: "Creative",
+    emoji: "🎤",
+    description:
+      "Honors the standout voice and sound of the year — a musical talent shaping the department's soundtrack.",
   },
 ];
 

@@ -41,7 +41,7 @@ const CANDIDATES_BY_CATEGORY = {
     { name: "prima", department: "" },
   ],
 
-  "Mr INTREPIDUS": [
+  "Mr TASA": [
     { name: "Chima", department: "" },
     { name: "Samz beat", department: "" },
     { name: "Destiny bills", department: "" },
@@ -101,7 +101,7 @@ const CANDIDATES_BY_CATEGORY = {
     { name: "Mark", department: "" },
   ],
 
-  "Miss INTREPIDUS": [
+  "Miss TASA": [
     { name: "Rukky", department: "" },
     { name: "Bolaji", department: "" },
     { name: "Somto", department: "" },

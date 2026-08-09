@@ -29,7 +29,7 @@ export async function paystackWebhook(req, res) {
         .post("https://fasan.onrender.com/api/webhooks/paystack", req.rawBody, {
           headers: {
             "Content-Type": "application/json",
-            "x-paystack-signature": signature, // same secret key both sides, so this still validates there
+            "x-paystack-signature": signature,
           },
         })
         .catch((err) =>
@@ -38,7 +38,22 @@ export async function paystackWebhook(req, res) {
       return;
     }
 
-    // else, it's INTREPIDUS — process as before
+    // Route by prefix: not ours, forward untouched to TASA's own webhook
+    if (reference.startsWith("TASA_")) {
+      axios
+        .post("https://tasan.onrender.com/api/webhooks/paystack", req.rawBody, {
+          headers: {
+            "Content-Type": "application/json",
+            "x-paystack-signature": signature,
+          },
+        })
+        .catch((err) =>
+          console.error("Failed to forward webhook to TASA:", err.message),
+        );
+      return;
+    }
+
+    // else, it's INTREPIDUS's own reference — process as before
     const { amount } = event.data;
     const vote = await Vote.findOne({ reference });
     if (!vote) return;

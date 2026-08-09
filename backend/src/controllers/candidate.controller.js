@@ -50,7 +50,7 @@ export async function createCandidate(req, res) {
       photoPublicId = "";
     if (req.file) {
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: "intrepidus/candidates",
+        folder: "tasa/candidates",
         width: 600,
         height: 750,
       });
@@ -65,7 +65,7 @@ export async function createCandidate(req, res) {
       photo,
       photoPublicId,
       candidateNumber: num,
-      candidateCode: "INTREPIDUS-" + String(num).padStart(4, "0"),
+      candidateCode: "TASA-" + String(num).padStart(4, "0"),
       event: event._id,
     });
 
@@ -94,7 +94,7 @@ export async function updateCandidate(req, res) {
         await deleteFromCloudinary(candidate.photoPublicId);
 
       const result = await uploadToCloudinary(req.file.buffer, {
-        folder: "intrepidus/candidates",
+        folder: "tasa/candidates",
         width: 600,
         height: 750,
       });
