@@ -13,7 +13,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="font-display font-bold text-white text-lg">
-                  INTREPIDUS Awards
+                  TASA Awards
                 </span>
                 <span className="text-gold-400 text-xs ml-2">2026</span>
               </div>
@@ -26,15 +26,15 @@ export default function Footer() {
               {[
                 {
                   icon: Instagram,
-                  href: "https://instagram.com/intrepidus_uniben",
+                  href: "https://instagram.com/tasa_uniben",
                 },
                 {
                   icon: Twitter,
-                  href: "https://twitter.com/intrepidus_uniben",
+                  href: "https://twitter.com/tasa_uniben",
                 },
                 {
                   icon: Facebook,
-                  href: "https://facebook.com/intrepidus_uniben",
+                  href: "https://facebook.com/tasa_uniben",
                 },
               ].map(({ icon: Icon, href }) => (
                 <a
@@ -60,7 +60,7 @@ export default function Footer() {
               {[
                 ["/", "Home"],
                 ["/events", "All events"],
-                ["/about", "About INTREPIDUS"],
+                ["/about", "About TASA"],
                 ["/contact", "Contact"],
                 ["/login", "Admin login"],
               ].map(([to, label]) => (
@@ -106,9 +106,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-          <p>
-            © {new Date().getFullYear()} INTREPIDUS Awards. All rights reserved.
-          </p>
+          <p>© {new Date().getFullYear()} TASA Awards. All rights reserved.</p>
         </div>
       </div>
     </footer>

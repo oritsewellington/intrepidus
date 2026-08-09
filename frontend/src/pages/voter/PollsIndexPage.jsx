@@ -51,7 +51,7 @@ export default function PollsIndexPage() {
     <div className="page-container py-16">
       <div className="text-center mb-12">
         <p className="section-label text-ember-600 mb-3">
-          Class of INTREPIDUS Awards 2026
+          Class of TASA Awards 2026
         </p>
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-zinc-900 mb-3">
           Live Results

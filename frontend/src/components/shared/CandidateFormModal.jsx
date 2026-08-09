@@ -74,8 +74,8 @@ export default function CandidateFormModal({
 
   const previewCode = isEdit
     ? candidate.candidateCode ||
-      `INTREPIDUS-${String(candidate.candidateNumber).padStart(4, "0")}`
-    : `INTREPIDUS-${String(nextCandidateNumber || 1).padStart(4, "0")}`;
+      `TASA-${String(candidate.candidateNumber).padStart(4, "0")}`
+    : `TASA-${String(nextCandidateNumber || 1).padStart(4, "0")}`;
 
   return (
     <Modal

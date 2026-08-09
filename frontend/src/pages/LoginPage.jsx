@@ -59,7 +59,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="input-field pl-10"
-                placeholder="intrepidus@gmail.com"
+                placeholder="tasa@gmail.com"
               />
             </div>
           </div>

@@ -118,7 +118,7 @@ export default function EventManagePage({ basePath = "/organizer" }) {
         <div className="flex items-center justify-between mb-5 gap-2 flex-wrap">
           <h2 className="font-display font-bold text-gray-900">Candidates</h2>
           <p className="text-xs text-gray-400">
-            Numbers auto-assigned: next is INTREPIDUS-
+            Numbers auto-assigned: next is TASA-
             {String(nextNumber).padStart(4, "0")}
           </p>
         </div>
@@ -161,8 +161,7 @@ export default function EventManagePage({ basePath = "/organizer" }) {
                       </p>
                       <span className="text-2xs px-1.5 py-0.5 bg-gold-50 text-gold-700 rounded font-bold flex-shrink-0">
                         {c.candidateCode ||
-                          "INTREPIDUS-" +
-                            String(c.candidateNumber).padStart(4, "0")}
+                          "TASA-" + String(c.candidateNumber).padStart(4, "0")}
                       </span>
                     </div>
                     <p className="text-xs text-gray-400 truncate">

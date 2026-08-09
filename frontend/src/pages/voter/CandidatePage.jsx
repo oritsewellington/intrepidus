@@ -90,7 +90,7 @@ export default function CandidatePage() {
   const candidateUrl = `${window.location.origin}/events/${eventId}/candidates/${candidateId}`;
   const candidateCode =
     candidate.candidateCode ||
-    "INTREPIDUS-" + String(candidate.candidateNumber).padStart(4, "0");
+    "TASA-" + String(candidate.candidateNumber).padStart(4, "0");
 
   // Real standings, derived from live data — never fabricated.
   const ranked = rankCandidates(allCandidates);
@@ -115,7 +115,7 @@ export default function CandidatePage() {
   };
 
   const handleShare = () => {
-    const text = `Vote for ${candidate.name} in ${event.title} — INTREPIDUS Awards 2026! 🏆`;
+    const text = `Vote for ${candidate.name} in ${event.title} — TASA Awards 2026! 🏆`;
     if (navigator.share) {
       navigator.share({ title: text, text, url: candidateUrl }).catch(() => {});
     } else handleCopyLink();

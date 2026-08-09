@@ -63,7 +63,7 @@ const BANNER_GRADIENTS = {
   General: "from-orange-950 via-ember-800 to-ink-950",
 };
 
-// ASSUMPTION: flagship event is named "Mr / Miss INTREPIDUS" — kept in
+// ASSUMPTION: flagship event is named "Mr / Miss TASA" — kept in
 // sync with the same check in HomePage.jsx.
 function isFlagshipEvent(event) {
   const name = (event.category || event.title || "")
@@ -71,7 +71,7 @@ function isFlagshipEvent(event) {
     .replace(/\./g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return name === "mr intrepidus" || name === "miss intrepidus";
+  return name === "mr tasa" || name === "miss tasa";
 }
 
 export default function EventsPage() {

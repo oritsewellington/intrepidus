@@ -46,7 +46,7 @@ export const formatPercent = (value, total) =>
 export const calcPercent = (value, total) =>
   !total ? 0 : parseFloat(((value / total) * 100).toFixed(2));
 
-export const generateReference = (prefix = "INTREPIDUS") =>
+export const generateReference = (prefix = "TASA") =>
   `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9).toUpperCase()}`;
 export const rankCandidates = (candidates) =>
   [...candidates].sort((a, b) => b.totalVotes - a.totalVotes);

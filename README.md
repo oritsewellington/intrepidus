@@ -1,4 +1,4 @@
-﻿# INTREPIDUS Awards 2026 â€” Voting Platform
+﻿# TASA Awards 2026 Voting Platform
 
 A full-stack MERN voting platform for the Faculty of Arts Student Association, University of Benin.
 All 26 official award categories are built-in. Payments via Paystack.
@@ -6,13 +6,13 @@ All 26 official award categories are built-in. Payments via Paystack.
 ## Award Categories (26)
 
 1. Most Social Male 2. Most Social Female 3. Course Rep of the Year
-2. Most Popular INTREPIDUS Male 5. Most Popular INTREPIDUS Female
+2. Most Popular TASA Male 5. Most Popular TASA Female
 3. Sportsman of the Year 7. Sportswoman of the Year
-4. Most Influential INTREPIDUS Male 9. Most Influential INTREPIDUS Female
+4. Most Influential TASA Male 9. Most Influential TASA Female
 5. Departmental President of the Year 11. Senator of the Year
 6. Parliamentarian of the Year 13. Content Creator of the Year
 7. Fashion Icon Male 15. Fashion Icon Female
-8. Most Creative INTREPIDUS 17. Most Talented INTREPIDUS
+8. Most Creative TASA 17. Most Talented TASA
 9. Artist of the Year 19. Political Personality of the Year
 10. Entrepreneur of the Year 21. Brand of the Year
 11. Executive of the Year 23. Academic Excellence Award Male
@@ -29,8 +29,8 @@ All 26 official award categories are built-in. Payments via Paystack.
 
 ## What's new in v3
 
-- All 26 official INTREPIDUS Awards 2026 categories built in, selectable when creating an event
-- Auto-generated unique candidate numbers per event (INTREPIDUS-0001, INTREPIDUS-0002, ...)
+- All 26 official TASA Awards 2026 categories built in, selectable when creating an event
+- Auto-generated unique candidate numbers per event (TASA-0001, TASA-0002, ...)
 - Organizers can create, edit, and delete candidates for their own events (not just admin)
 - Brand new homepage: animated hero, full category showcase with group filters, live events, how-it-works section
 - Category group filter tabs on the public events page

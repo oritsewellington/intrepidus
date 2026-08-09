@@ -40,7 +40,7 @@ export default function AdminLayout() {
           </div>
           <div>
             <p className="text-white font-display font-bold text-sm leading-none">
-              INTREPIDUS Admin
+              TASA Admin
             </p>
             <p className="text-gold-400 text-2xs mt-0.5">2026</p>
           </div>

@@ -89,7 +89,7 @@ export default function CategoryFormModal({ open, onClose, category }) {
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className="input-field"
-            placeholder="e.g. Most Innovative INTREPIDUS"
+            placeholder="e.g. Most Innovative PIDUS"
             required
           />
         </div>

@@ -67,7 +67,7 @@ export const AWARD_CATEGORIES = [
   },
   {
     id: 9,
-    name: "Miss INTREPIDUS",
+    name: "Miss TASA",
     group: "Popularity",
     emoji: "👸",
     description:
@@ -75,7 +75,7 @@ export const AWARD_CATEGORIES = [
   },
   {
     id: 10,
-    name: "Mr INTREPIDUS",
+    name: "Mr TASA",
     group: "Popularity",
     emoji: "🤵",
     description:

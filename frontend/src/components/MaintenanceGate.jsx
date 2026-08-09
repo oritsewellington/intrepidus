@@ -2,7 +2,7 @@ import { Crown, Clock, Mail } from "lucide-react";
 
 export const MAINTENANCE_MODE = true;
 
-const CONTACT_EMAIL = "INTREPIDUS.awards2026@gmail.com";
+const CONTACT_EMAIL = "akitikori.wellington2031@gmail.com";
 
 export default function MaintenanceGate() {
   return (
@@ -53,7 +53,7 @@ export default function MaintenanceGate() {
         )}
 
         <p className="text-gray-600 text-xs mt-10">
-          INTREPIDUS 2026 · University of Benin
+          TASA 2026 · University of Benin
         </p>
       </div>
     </div>

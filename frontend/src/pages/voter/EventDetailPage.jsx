@@ -74,7 +74,7 @@ function isFlagshipEvent(event) {
     .replace(/\./g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return name === "mr intrepidus" || name === "miss intrepidus";
+  return name === "mr tasa" || name === "miss tasa";
 }
 
 export default function EventDetailPage() {

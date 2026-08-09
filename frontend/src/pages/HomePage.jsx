@@ -18,6 +18,7 @@ import {
   Briefcase,
   Sparkles,
   Flame,
+  Drama,
 } from "lucide-react";
 import { useGetEventsQuery } from "../store/api/eventsApi.js";
 import { useGetCategoriesQuery } from "../store/api/categoriesApi.js";
@@ -29,7 +30,11 @@ import {
   PageLoader,
 } from "../components/ui/index.jsx";
 
-const HEADING_FONT = { fontFamily: "'Sora', system-ui, sans-serif" };
+const DISPLAY_FONT = { fontFamily: "'Playfair Display', Georgia, serif" };
+const MARQUEE_FONT = {
+  fontFamily: "'Bebas Neue', system-ui, sans-serif",
+  letterSpacing: "0.08em",
+};
 
 const GROUP_ICONS = {
   Social: Users,
@@ -44,19 +49,19 @@ const GROUP_ICONS = {
 };
 
 const GROUP_COLORS = {
-  Social: "from-indigo-500 to-indigo-700",
-  Academic: "from-violet-500 to-violet-700",
-  Popularity: "from-amber-400 to-amber-600",
-  Sports: "from-emerald-500 to-emerald-700",
-  Leadership: "from-rose-500 to-rose-700",
-  Creative: "from-pink-500 to-fuchsia-600",
-  Fashion: "from-purple-500 to-violet-700",
-  Business: "from-sky-500 to-indigo-600",
-  General: "from-amber-500 to-orange-600",
+  Social: "from-[#6E1423] to-[#3D0B14]",
+  Academic: "from-[#1F3B3B] to-[#0F211F]",
+  Popularity: "from-[#C7A34C] to-[#8A6A24]",
+  Sports: "from-[#2E4A3F] to-[#16261F]",
+  Leadership: "from-[#7A1830] to-[#420C1A]",
+  Creative: "from-[#8A2C42] to-[#4A1523]",
+  Fashion: "from-[#5C4A8A] to-[#2E2350]",
+  Business: "from-[#1F3B54] to-[#0F1F2E]",
+  General: "from-[#C7A34C] to-[#6E1423]",
 };
 
-const FLAGSHIP_EVENT_BANNER = "/intrepidus-flagship-banner.webp";
-const DEFAULT_EVENT_BANNER = "/intrepidus-event-banner.webp";
+const FLAGSHIP_EVENT_BANNER = "/tasa-flagship-banner.webp";
+const DEFAULT_EVENT_BANNER = "/tasa-event-banner.webp";
 
 function isFlagshipEvent(event) {
   const name = (event.category || event.title || "")
@@ -64,94 +69,59 @@ function isFlagshipEvent(event) {
     .replace(/\./g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return name === "mr intrepidus" || name === "miss intrepidus";
+  return name === "mr tasa" || name === "miss tasa";
 }
 
 const CATEGORIES_PER_PAGE = 9;
 const TOP_STANDINGS_COUNT = 6;
 
-function useWelcomeConfetti(durationMs = 6000) {
+function useWelcomeConfetti(durationMs = 5000) {
   useEffect(() => {
     const end = Date.now() + durationMs;
-
-    const brandColors = [
-      "#D9A441", // amber
-      "#F3D9A4", // pale amber
-      "#4C5FD9", // ink-indigo
-      "#0A0C10", // near-black
-      "#FFFFFF",
-    ];
-
-    const ribbonShape = confetti.shapeFromPath({
-      path: "M0 0 L3 0 L3 20 L0 20 Z",
-    });
+    const curtainColors = ["#C7A34C", "#6E1423", "#F4ECDA", "#8A2C42"];
 
     confetti({
-      particleCount: 90,
-      spread: 65,
-      origin: { x: 0, y: 0.9 },
-      colors: brandColors,
-      startVelocity: 55,
-      gravity: 0.9,
-      scalar: 1.2,
-    });
-
-    confetti({
-      particleCount: 90,
-      spread: 65,
-      origin: { x: 1, y: 0.9 },
-      colors: brandColors,
-      startVelocity: 55,
-      gravity: 0.9,
-      scalar: 1.2,
+      particleCount: 70,
+      spread: 60,
+      origin: { x: 0.5, y: 0.3 },
+      colors: curtainColors,
+      startVelocity: 40,
+      gravity: 1,
+      scalar: 1.1,
+      angle: 90,
     });
 
     let frameId;
-
     (function frame() {
-      const randomX = Math.random();
-
       confetti({
         particleCount: 1,
-        shapes: [ribbonShape],
-        colors: brandColors,
-        origin: { x: randomX, y: -0.1 },
+        colors: curtainColors,
+        origin: { x: Math.random(), y: -0.1 },
         startVelocity: 0,
-        gravity: 0.4,
-        drift: (Math.random() - 0.5) * 1.5,
-        scalar: 1.4,
-        ticks: 500,
-      });
-
-      confetti({
-        particleCount: 2,
-        shapes: ["circle"],
-        colors: brandColors,
-        origin: { x: randomX, y: -0.1 },
-        startVelocity: Math.random() * 5 + 2,
-        gravity: 0.5,
-        drift: (Math.random() - 0.5) * 2.5,
-        scalar: 0.6,
+        gravity: 0.35,
+        drift: (Math.random() - 0.5) * 1.2,
+        scalar: 1.1,
         ticks: 400,
       });
-
-      if (Date.now() < end) {
-        frameId = requestAnimationFrame(frame);
-      }
+      if (Date.now() < end) frameId = requestAnimationFrame(frame);
     })();
 
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
+    return () => cancelAnimationFrame(frameId);
   }, [durationMs]);
 }
 
 export default function HomePage() {
   const [activeGroup, setActiveGroup] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [curtainsOpen, setCurtainsOpen] = useState(false);
   const categoriesSectionRef = useRef(null);
 
   useWelcomeConfetti();
+
+  useEffect(() => {
+    const t = setTimeout(() => setCurtainsOpen(true), 250);
+    return () => clearTimeout(t);
+  }, []);
 
   const { data: events = [], isLoading: eventsLoading } = useGetEventsQuery({});
   const { data: categories = [], isLoading: catLoading } =
@@ -168,10 +138,6 @@ export default function HomePage() {
 
   const liveEvents = events.filter(
     (e) => getEventStatus(e.startDate, e.endDate, e.isOpen) === "open",
-  );
-  const totalVotesAcrossEvents = events.reduce(
-    (s, e) => s + (e.totalVotes || 0),
-    0,
   );
 
   const topStandings = useMemo(() => {
@@ -217,100 +183,104 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Local, self-contained animation + font utilities — no dependency
-          on external tailwind.config tokens. */}
       <style>{`
-        @keyframes ixFadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+
+        @keyframes tasaFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes tasaCurtainLeft { from { transform: translateX(0); } to { transform: translateX(-102%); } }
+        @keyframes tasaCurtainRight { from { transform: translateX(0); } to { transform: translateX(102%); } }
+        @keyframes tasaFlicker {
+          0%, 100% { opacity: 1; }
+          45% { opacity: 0.85; }
+          50% { opacity: 1; }
+          52% { opacity: 0.9; }
+          55% { opacity: 1; }
         }
-        @keyframes ixFloat {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-12px) rotate(1.5deg); }
+        @keyframes tasaChase { to { background-position: 40px 0; } }
+        @keyframes tasaFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .tasa-fade-in { animation: tasaFadeIn .7s ease-out both; }
+        .tasa-curtain-left { animation: tasaCurtainLeft 1.1s cubic-bezier(.65,0,.35,1) .2s forwards; }
+        .tasa-curtain-right { animation: tasaCurtainRight 1.1s cubic-bezier(.65,0,.35,1) .2s forwards; }
+        .tasa-flicker { animation: tasaFlicker 4s ease-in-out infinite; }
+        .tasa-float { animation: tasaFloat 6s ease-in-out infinite; }
+        .tasa-marquee-border {
+          background-image: radial-gradient(circle, #C7A34C 2px, transparent 2.5px);
+          background-size: 14px 14px;
+          animation: tasaChase 1.4s linear infinite;
         }
-        @keyframes ixPulseGlow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(217,164,65,0.45); }
-          50% { box-shadow: 0 0 0 14px rgba(217,164,65,0); }
+        .tasa-curtain-fabric {
+          background-image: repeating-linear-gradient(
+            90deg,
+            #7A1830 0px, #7A1830 18px,
+            #5C1120 18px, #5C1120 36px
+          );
         }
-        @keyframes ixSpinSlow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .ix-fade-in { animation: ixFadeIn .7s ease-out both; }
-        .ix-float { animation: ixFloat 6s ease-in-out infinite; }
-        .ix-pulse-glow { animation: ixPulseGlow 2.4s ease-in-out infinite; }
-        .ix-spin-slow { animation: ixSpinSlow 30s linear infinite; }
       `}</style>
 
-      <div className="ix-fade-in">
-        {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-[#0A0C10]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* dot lattice */}
-            <svg
-              className="absolute inset-0 w-full h-full opacity-[0.07]"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <pattern
-                  id="ix-dots"
-                  width="28"
-                  height="28"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <circle cx="1.5" cy="1.5" r="1.5" fill="#D9A441" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#ix-dots)" />
-            </svg>
-
-            {/* asymmetric blurred blobs */}
+      <div className="tasa-fade-in">
+        <section className="relative overflow-hidden bg-[#120D0C] min-h-[640px] flex items-center">
+          <div className="absolute inset-0 pointer-events-none">
             <div
-              className="absolute w-[420px] h-[420px] rounded-full bg-amber-500/20 blur-[110px]"
-              style={{ top: "-12%", right: "-8%" }}
+              className="absolute left-1/2 top-0 w-[900px] h-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full opacity-40"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(246,217,139,0.35) 0%, rgba(246,217,139,0.08) 40%, transparent 70%)",
+              }}
             />
             <div
-              className="absolute w-[320px] h-[320px] rounded-full bg-indigo-600/25 blur-[100px]"
-              style={{ bottom: "-10%", left: "-6%" }}
-            />
-
-            {/* rotated diamond accent */}
-            <div
-              className="ix-spin-slow absolute w-40 h-40 border border-amber-400/20 rounded-[28%]"
-              style={{ top: "8%", left: "6%" }}
+              className="absolute bottom-0 inset-x-0 h-40 opacity-[0.15]"
+              style={{
+                background:
+                  "repeating-linear-gradient(90deg, #F4ECDA 0px, #F4ECDA 2px, transparent 2px, transparent 60px)",
+              }}
             />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-24">
-            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-14 lg:gap-10 items-center">
-              {/* ── Left: message + CTA ─────────────────────────────── */}
+          <div className="absolute inset-0 z-20 flex pointer-events-none">
+            <div
+              className={`w-1/2 h-full tasa-curtain-fabric shadow-[inset_-40px_0_60px_-20px_rgba(0,0,0,0.6)] ${
+                curtainsOpen ? "tasa-curtain-left" : ""
+              }`}
+            />
+            <div
+              className={`w-1/2 h-full tasa-curtain-fabric shadow-[inset_40px_0_60px_-20px_rgba(0,0,0,0.6)] ${
+                curtainsOpen ? "tasa-curtain-right" : ""
+              }`}
+            />
+          </div>
+          <div className="absolute top-0 inset-x-0 h-6 sm:h-8 z-30 bg-gradient-to-b from-[#C7A34C] to-[#8A6A24] shadow-md" />
+
+          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-20 w-full">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
               <div className="text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 bg-amber-400/10 border border-amber-400/25 rounded-full text-amber-300 text-[10px] sm:text-xs font-bold tracking-wide sm:tracking-[0.18em] uppercase mb-8 ix-fade-in max-w-full text-center leading-snug">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-400 rounded-full animate-pulse flex-shrink-0" />
-                  <span className="whitespace-normal">
-                    Class of INTREPIDUS Awards 2026 — University of Benin
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-[#C7A34C]/40 bg-[#C7A34C]/10 text-[#E8C97A] text-[11px] sm:text-xs font-medium mb-8 tasa-flicker">
+                  <span style={MARQUEE_FONT}>
+                    THEATRE ARTS STUDENT ASSOCIATION · UNIBEN · 2026
                   </span>
                 </div>
 
                 <h1
-                  style={HEADING_FONT}
-                  className="text-5xl sm:text-6xl xl:text-7xl font-bold text-white leading-[1.05] mb-6 text-balance"
+                  style={DISPLAY_FONT}
+                  className="text-5xl sm:text-6xl xl:text-7xl font-black italic text-[#F4ECDA] leading-[1.05] mb-6"
                 >
-                  <span className="block">Honor the</span>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-indigo-400">
-                    Bold &amp;
+                  <span className="block not-italic font-normal text-3xl sm:text-4xl text-[#C7A34C] mb-2">
+                    Presented By
                   </span>
-                  <span className="block">Brilliant</span>
+                  The Theatre Arts
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#C7A34C] via-[#F6D98B] to-[#C7A34C]">
+                    Student Association
+                  </span>
                 </h1>
 
-                <p className="text-lg sm:text-xl text-zinc-400 max-w-xl mx-auto lg:mx-0 mb-10 font-light leading-relaxed">
+                <p className="text-lg text-[#D8CDB8] max-w-xl mx-auto lg:mx-0 mb-10 font-light leading-relaxed">
                   {statsLoading ? (
                     <span className="inline-block h-6 w-64 max-w-full bg-white/10 rounded-md animate-pulse align-middle" />
                   ) : (
                     <>
-                      {totalCategories} award categories. Vote for the boldest
-                      minds, leaders, artists, and icons of the Faculty of Arts,
-                      UNIBEN.
+                      {totalCategories} categories celebrating the students who
+                      write, direct, perform, and build every production — in
+                      recognition by the very community they belong to.
                     </>
                   )}
                 </p>
@@ -318,120 +288,61 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                   <a
                     href="#categories"
-                    className="ix-pulse-glow group inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-10 sm:py-4 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-[#1A1204] font-semibold text-sm sm:text-base shadow-[0_15px_40px_-10px_rgba(217,164,65,0.55)] hover:-translate-y-0.5 hover:shadow-[0_20px_50px_-8px_rgba(217,164,65,0.7)] transition-all duration-300 w-full sm:w-auto"
+                    className="group relative inline-flex items-center justify-center gap-2 px-10 py-4 rounded-sm bg-[#6E1423] text-[#F4ECDA] font-semibold text-base border border-[#C7A34C]/50 hover:bg-[#7A1830] transition-colors duration-300"
                   >
-                    <Trophy size={18} className="flex-shrink-0" />
+                    <span className="tasa-marquee-border absolute -inset-[3px] rounded-[3px] opacity-70 -z-10" />
+                    <Drama size={18} />
                     <span>Find Your Category</span>
                     <ArrowRight
                       size={16}
-                      className="flex-shrink-0 group-hover:translate-x-1 transition-transform"
+                      className="group-hover:translate-x-1 transition-transform"
                     />
                   </a>
 
                   <Link
                     to="/about"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-10 sm:py-4 rounded-full border border-white/15 bg-white/[0.04] backdrop-blur text-white font-medium text-sm sm:text-base hover:bg-white/10 hover:border-white/25 transition-all duration-300 w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-sm border border-[#F4ECDA]/25 text-[#F4ECDA] font-medium text-base hover:bg-white/5 transition-colors duration-300"
                   >
-                    Learn More
+                    About TASA
                   </Link>
                 </div>
               </div>
 
-              {/* ── Right: brand emblem (no banner asset needed) ─────── */}
               <div className="flex justify-center lg:justify-end">
-                <div className="relative ix-float">
-                  <div className="absolute -inset-10 bg-gradient-to-br from-amber-500/25 to-indigo-600/20 blur-3xl rounded-full pointer-events-none" />
-
-                  {/* rotating dashed ring */}
-                  <div className="ix-spin-slow absolute -inset-5 sm:-inset-6 rounded-full border-2 border-dashed border-amber-400/20 pointer-events-none" />
-
-                  {/* medallion */}
-                  <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-[#181B24] to-[#0A0C10] border border-white/10 shadow-2xl shadow-black/60 flex items-center justify-center overflow-hidden">
-                    {/* compass rosette */}
-                    <svg
-                      className="absolute inset-0 w-full h-full opacity-30"
-                      viewBox="0 0 200 200"
-                      xmlns="http://www.w3.org/2000/svg"
+                <div className="tasa-float relative w-64 sm:w-72 bg-[#F4ECDA] rounded-sm shadow-2xl shadow-black/50 border-4 border-[#C7A34C] p-7 -rotate-2">
+                  <div className="text-center">
+                    <p
+                      style={MARQUEE_FONT}
+                      className="text-[#6E1423] text-xs mb-1"
                     >
-                      <circle
-                        cx="100"
-                        cy="100"
-                        r="92"
-                        fill="none"
-                        stroke="#D9A441"
-                        strokeWidth="0.5"
-                      />
-                      <circle
-                        cx="100"
-                        cy="100"
-                        r="76"
-                        fill="none"
-                        stroke="#4C5FD9"
-                        strokeWidth="0.5"
-                      />
-                      {Array.from({ length: 24 }).map((_, i) => (
-                        <line
-                          key={i}
-                          x1="100"
-                          y1="8"
-                          x2="100"
-                          y2={i % 6 === 0 ? "20" : "15"}
-                          stroke="#D9A441"
-                          strokeWidth={i % 6 === 0 ? 1 : 0.5}
-                          transform={`rotate(${(i * 360) / 24} 100 100)`}
-                        />
-                      ))}
-                    </svg>
-
-                    <div className="absolute inset-4 rounded-full border border-amber-400/25" />
-                    <div className="absolute inset-8 rounded-full border border-white/10" />
-
-                    <div className="relative text-center px-5">
-                      <span
-                        style={HEADING_FONT}
-                        className="block whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-br from-amber-300 via-amber-400 to-indigo-400 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-none"
-                      >
-                        INTREPIDUS
+                      A PRODUCTION OF
+                    </p>
+                    <h2
+                      style={DISPLAY_FONT}
+                      className="text-3xl font-black italic text-[#241A15] leading-none mb-3"
+                    >
+                      TASA
+                      <span className="block text-lg not-italic font-normal mt-1 text-[#6E1423]">
+                        Awards
                       </span>
-                      <span className="block mt-2 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase text-zinc-400">
-                        Class of 2026
-                      </span>
+                    </h2>
+                    <div className="h-px bg-[#C7A34C] my-4" />
+                    <p className="text-[11px] text-[#5C4A3A] leading-relaxed mb-4">
+                      Featuring the finest of the Faculty of Arts, University of
+                      Benin
+                    </p>
+                    <div className="flex items-center justify-center gap-1.5 text-[#6E1423] text-xs font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                      {statsLoading
+                        ? "Curtain rising…"
+                        : `${liveEvents.length} live now`}
                     </div>
-
-                    <Sparkles
-                      size={14}
-                      className="absolute top-6 right-8 text-amber-400/50"
-                    />
-                    <Star
-                      size={12}
-                      className="absolute bottom-8 left-7 text-indigo-400/50"
-                    />
-                  </div>
-
-                  {/* floating chip — live category count */}
-                  <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-6 flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-[#12141B]/90 backdrop-blur border border-white/10 shadow-xl">
-                    <Trophy
-                      size={14}
-                      className="text-amber-400 flex-shrink-0"
-                    />
-                    <span className="text-white text-xs sm:text-sm font-semibold whitespace-nowrap">
-                      {statsLoading ? "…" : totalCategories} Categories
-                    </span>
-                  </div>
-
-                  {/* floating chip — live voting status */}
-                  <div className="absolute -bottom-3 -left-3 sm:-bottom-4 sm:-left-6 flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-[#12141B]/90 backdrop-blur border border-white/10 shadow-xl">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-                    <span className="text-white text-xs sm:text-sm font-semibold whitespace-nowrap">
-                      Live Voting Open
-                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* stats row */}
-            <div className="flex flex-wrap items-center justify-center gap-10 mt-20">
+            <div className="flex flex-wrap items-center justify-center gap-10 mt-16 pt-10 border-t border-[#F4ECDA]/10">
               {statsLoading
                 ? Array.from({ length: 3 }).map((_, i) => (
                     <div key={i} className="text-center">
@@ -440,66 +351,50 @@ export default function HomePage() {
                     </div>
                   ))
                 : [
-                    {
-                      value: totalCategories.toString(),
-                      label: "Award Categories",
-                    },
+                    { value: totalCategories.toString(), label: "Categories" },
                     { value: "100%", label: "Secure Payments" },
-                    {
-                      value: liveEvents.length.toString(),
-                      label: "Live Events",
-                    },
+                    { value: liveEvents.length.toString(), label: "Live Now" },
                   ].map(({ value, label }) => (
-                    <div key={label} className="text-center ix-fade-in">
+                    <div key={label} className="text-center">
                       <div
-                        style={HEADING_FONT}
-                        className="text-3xl font-bold text-white"
+                        style={DISPLAY_FONT}
+                        className="text-3xl font-bold text-[#F4ECDA] italic"
                       >
                         {value}
                       </div>
-                      <div className="text-xs text-zinc-500 font-medium mt-1 tracking-wide">
+                      <div
+                        style={MARQUEE_FONT}
+                        className="text-[11px] text-[#C7A34C] mt-1"
+                      >
                         {label}
                       </div>
                     </div>
                   ))}
             </div>
           </div>
-
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg
-              viewBox="0 0 1440 60"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              className="w-full h-[50px]"
-            >
-              <path d="M0 60L1440 0L1440 60L0 60Z" fill="#FAF9F6" />
-            </svg>
-          </div>
         </section>
 
-        {/* ── Top standings ────────────────────────────────────────────── */}
         {!pollsLoading && topStandings.length > 0 && (
-          <section className="py-16 bg-white border-t border-zinc-100">
+          <section className="py-16 bg-[#F4ECDA] border-t border-[#C7A34C]/30">
             <div className="max-w-7xl mx-auto px-6 lg:px-10">
               <div className="flex items-end justify-between gap-4 mb-8 flex-wrap">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Flame size={14} className="text-amber-500" />
-                    <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600">
-                      Top Standings
-                    </p>
-                  </div>
+                  <p
+                    style={MARQUEE_FONT}
+                    className="text-[11px] text-[#6E1423] mb-1"
+                  >
+                    CURRENT REVIEWS
+                  </p>
                   <h2
-                    style={HEADING_FONT}
-                    className="text-2xl font-bold text-zinc-900"
+                    style={DISPLAY_FONT}
+                    className="text-2xl font-bold italic text-[#241A15]"
                   >
                     Who&rsquo;s leading right now
                   </h2>
                 </div>
                 <Link
                   to="/polls"
-                  className="inline-flex items-center gap-1 text-sm font-semibold text-amber-600 hover:text-amber-700 hover:gap-2 transition-all"
+                  className="inline-flex items-center gap-1 text-sm font-semibold text-[#6E1423] hover:gap-2 transition-all"
                 >
                   View all results <ArrowRight size={14} />
                 </Link>
@@ -508,57 +403,52 @@ export default function HomePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {topStandings.map((poll) => {
                   const hasRealLeader = poll.leaderName && poll.leaderVotes > 0;
-
                   return (
                     <Link
                       key={poll.eventId}
                       to={`/events/${poll.eventId}/results`}
-                      className="group rounded-3xl bg-white border border-zinc-100 p-5 shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] hover:shadow-[0_25px_60px_-15px_rgba(76,95,217,0.2)] hover:-translate-y-1 transition-all duration-300"
+                      className="group bg-white rounded-sm border border-[#C7A34C]/25 p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                     >
                       <div className="flex items-start justify-between gap-2 mb-3">
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-xs text-[#8A7A64]">
                           {poll.category || "Uncategorized"}
                         </p>
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-100 rounded-full px-2 py-0.5">
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-[#6E1423] bg-[#6E1423]/10 rounded-full px-2 py-0.5">
                           <Trophy size={10} />
                         </span>
                       </div>
-
-                      <h3 className="font-semibold text-zinc-900 text-sm leading-snug mb-1 group-hover:text-amber-700 transition-colors truncate">
+                      <h3 className="font-semibold text-[#241A15] text-sm leading-snug mb-1 group-hover:text-[#6E1423] transition-colors truncate">
                         {poll.eventTitle}
                       </h3>
-
                       {hasRealLeader ? (
-                        <p className="text-xs text-zinc-500 mb-3">
+                        <p className="text-xs text-[#8A7A64] mb-3">
                           Leading:{" "}
-                          <span className="font-semibold text-zinc-800">
+                          <span className="font-semibold text-[#241A15]">
                             {poll.leaderName}
                           </span>
                         </p>
                       ) : (
-                        <p className="text-xs text-zinc-400 mb-3 italic">
+                        <p className="text-xs text-[#8A7A64] mb-3 italic">
                           No votes yet
                         </p>
                       )}
-
                       {hasRealLeader && poll.percent != null && (
                         <>
-                          <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-1.5">
+                          <div className="w-full h-1.5 bg-[#F4ECDA] rounded-full overflow-hidden mb-1.5">
                             <div
-                              className="h-full bg-gradient-to-r from-amber-400 to-indigo-500 rounded-full transition-all"
+                              className="h-full bg-gradient-to-r from-[#C7A34C] to-[#6E1423] rounded-full transition-all"
                               style={{
                                 width: `${Math.min(poll.percent, 100)}%`,
                               }}
                             />
                           </div>
-                          <p className="text-xs font-bold text-amber-600">
+                          <p className="text-xs font-bold text-[#6E1423]">
                             {poll.percent.toFixed(1)}% of votes
                           </p>
                         </>
                       )}
-
-                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-50">
-                        <span className="text-xs font-semibold text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#F4ECDA]">
+                        <span className="text-xs font-semibold text-[#6E1423] flex items-center gap-1 group-hover:gap-2 transition-all">
                           View standings <ChevronRight size={12} />
                         </span>
                       </div>
@@ -570,25 +460,27 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* ── Categories ───────────────────────────────────────────────── */}
         <section
           id="categories"
           ref={categoriesSectionRef}
-          className="py-24 bg-[#FAF9F6] scroll-mt-16"
+          className="py-24 bg-[#FBF7EE] scroll-mt-16"
         >
           <div className="max-w-7xl mx-auto px-6 lg:px-10">
             <div className="text-center mb-14">
-              <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
-                Class of INTREPIDUS Awards 2026
+              <p
+                style={MARQUEE_FONT}
+                className="text-[11px] text-[#6E1423] mb-3"
+              >
+                TASA AWARDS 2026 · FULL PROGRAMME
               </p>
               <h2
-                style={HEADING_FONT}
-                className="text-3xl sm:text-4xl font-bold text-zinc-900 mb-4"
+                style={DISPLAY_FONT}
+                className="text-3xl sm:text-4xl font-bold italic text-[#241A15] mb-4"
               >
                 {totalCategories ? `All ${totalCategories}` : "All"} Award
                 Categories
               </h2>
-              <p className="text-zinc-500 max-w-lg mx-auto text-sm">
+              <p className="text-[#5C4A3A] max-w-lg mx-auto text-sm">
                 Tap a category to see its candidates and cast your vote. Live
                 categories are marked with a green dot.
               </p>
@@ -597,20 +489,20 @@ export default function HomePage() {
             {catLoading ? (
               <PageLoader />
             ) : categories.length === 0 ? (
-              <p className="text-center text-sm text-zinc-400 py-12">
+              <p className="text-center text-sm text-[#8A7A64] py-12">
                 Categories are being set up. Check back shortly.
               </p>
             ) : (
               <>
                 <div className="flex flex-wrap gap-2 justify-center mb-12">
                   {"All" === activeGroup ? (
-                    <button className="flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold border transition-all bg-[#0A0C10] text-white border-[#0A0C10] shadow-sm">
+                    <button className="px-5 py-2.5 rounded-sm text-sm font-semibold bg-[#241A15] text-[#F4ECDA] border border-[#241A15]">
                       All
                     </button>
                   ) : (
                     <button
                       onClick={() => setActiveGroup("All")}
-                      className="flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium border transition-all bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50"
+                      className="px-5 py-2.5 rounded-sm text-sm font-medium bg-white text-[#5C4A3A] border border-[#C7A34C]/30 hover:border-[#C7A34C] transition-colors"
                     >
                       All
                     </button>
@@ -621,10 +513,10 @@ export default function HomePage() {
                       <button
                         key={group}
                         onClick={() => setActiveGroup(group)}
-                        className={`flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium border transition-all ${
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-sm text-sm font-medium border transition-colors ${
                           activeGroup === group
-                            ? "bg-[#0A0C10] text-white border-[#0A0C10] shadow-sm font-semibold"
-                            : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50"
+                            ? "bg-[#241A15] text-[#F4ECDA] border-[#241A15] font-semibold"
+                            : "bg-white text-[#5C4A3A] border-[#C7A34C]/30 hover:border-[#C7A34C]"
                         }`}
                       >
                         {Icon && <Icon size={13} />}
@@ -635,9 +527,9 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex items-center justify-between mb-4 px-1">
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-xs text-[#8A7A64]">
                     Showing{" "}
-                    <span className="font-medium text-zinc-600">
+                    <span className="font-medium text-[#5C4A3A]">
                       {filteredCategories.length === 0 ? 0 : startIdx + 1}–
                       {Math.min(
                         startIdx + CATEGORIES_PER_PAGE,
@@ -645,13 +537,13 @@ export default function HomePage() {
                       )}
                     </span>{" "}
                     of{" "}
-                    <span className="font-medium text-zinc-600">
+                    <span className="font-medium text-[#5C4A3A]">
                       {filteredCategories.length}
                     </span>{" "}
                     categories
                   </p>
                   {totalPages > 1 && (
-                    <p className="text-xs text-zinc-400">
+                    <p className="text-xs text-[#8A7A64]">
                       Page {safePage} of {totalPages}
                     </p>
                   )}
@@ -661,7 +553,7 @@ export default function HomePage() {
                   {paginatedCategories.map((cat) => {
                     const Icon = GROUP_ICONS[cat.group] || Award;
                     const gradColor =
-                      GROUP_COLORS[cat.group] || "from-amber-400 to-amber-600";
+                      GROUP_COLORS[cat.group] || "from-[#C7A34C] to-[#6E1423]";
                     const matchEvent = events.find(
                       (e) =>
                         getEventStatus(e.startDate, e.endDate, e.isOpen) ===
@@ -671,10 +563,10 @@ export default function HomePage() {
                       <Link
                         key={cat._id}
                         to={`/category/${cat._id}`}
-                        className="group rounded-3xl bg-white border border-zinc-100 p-6 shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] hover:shadow-[0_25px_60px_-15px_rgba(217,164,65,0.25)] hover:-translate-y-1 transition-all duration-300 flex items-start gap-4"
+                        className="group bg-white rounded-sm border border-[#C7A34C]/25 p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4"
                       >
                         <div
-                          className={`w-12 h-12 bg-gradient-to-br ${gradColor} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform text-lg`}
+                          className={`w-12 h-12 bg-gradient-to-br ${gradColor} rounded-sm flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform`}
                         >
                           <span>
                             {cat.emoji || (
@@ -684,25 +576,25 @@ export default function HomePage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-1">
-                            <p className="font-semibold text-zinc-900 text-sm leading-snug group-hover:text-amber-700 transition-colors">
+                            <p className="font-semibold text-[#241A15] text-sm leading-snug group-hover:text-[#6E1423] transition-colors">
                               {cat.name}
                             </p>
                             {matchEvent && (
                               <span
-                                className="flex-shrink-0 w-2 h-2 bg-emerald-500 rounded-full mt-1 animate-pulse"
+                                className="flex-shrink-0 w-2 h-2 bg-emerald-600 rounded-full mt-1 animate-pulse"
                                 title="Live event"
                               />
                             )}
                           </div>
-                          <p className="text-xs text-zinc-400 mt-0.5">
+                          <p className="text-xs text-[#8A7A64] mt-0.5">
                             {cat.group}
                           </p>
                           {cat.description && (
-                            <p className="text-xs text-zinc-500 mt-1.5 leading-relaxed line-clamp-2">
+                            <p className="text-xs text-[#5C4A3A] mt-1.5 leading-relaxed line-clamp-2">
                               {cat.description}
                             </p>
                           )}
-                          <p className="text-xs text-amber-600 font-medium mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                          <p className="text-xs text-[#6E1423] font-medium mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                             {matchEvent ? "Vote now" : "View →"}
                             <ChevronRight size={11} />
                           </p>
@@ -725,25 +617,26 @@ export default function HomePage() {
             <div className="text-center mt-14">
               <Link
                 to="/events"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-10 sm:py-4 rounded-full bg-[#0A0C10] text-white font-semibold text-sm sm:text-base hover:bg-[#171922] transition-all duration-300 w-full sm:w-auto max-w-xs mx-auto"
+                className="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-sm bg-[#241A15] text-[#F4ECDA] font-semibold text-sm hover:bg-[#3A2A20] transition-colors duration-300"
               >
-                <Trophy size={16} className="flex-shrink-0" /> See All Voting
-                Events
+                <Trophy size={16} /> See All Voting Events
               </Link>
             </div>
           </div>
         </section>
 
-        {/* ── How it works ─────────────────────────────────────────────── */}
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6 lg:px-10">
             <div className="text-center mb-16">
-              <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-amber-600 mb-3">
-                Simple process
+              <p
+                style={MARQUEE_FONT}
+                className="text-[11px] text-[#6E1423] mb-3"
+              >
+                THE PROGRAMME
               </p>
               <h2
-                style={HEADING_FONT}
-                className="text-3xl font-bold text-zinc-900"
+                style={DISPLAY_FONT}
+                className="text-3xl font-bold italic text-[#241A15]"
               >
                 How voting works
               </h2>
@@ -751,40 +644,43 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-10 max-w-4xl mx-auto">
               {[
                 {
-                  step: "01",
+                  act: "Act I",
                   icon: Trophy,
                   title: "Choose a category",
                   desc: "Browse all the award categories and pick the one you want to vote in.",
                 },
                 {
-                  step: "02",
+                  act: "Act II",
                   icon: Users,
                   title: "Pick your candidate",
                   desc: "View all contestants, their profiles, and current standings before deciding.",
                 },
                 {
-                  step: "03",
+                  act: "Act III",
                   icon: Shield,
                   title: "Pay & vote securely",
                   desc: "Complete your vote via Paystack — Nigeria's most trusted payment gateway.",
                 },
-              ].map(({ step, icon: Icon, title, desc }) => (
-                <div key={step} className="text-center group">
+              ].map(({ act, icon: Icon, title, desc }) => (
+                <div key={act} className="text-center group">
                   <div className="relative inline-flex mb-6">
-                    <div className="w-16 h-16 bg-[#FAF9F6] rounded-2xl border border-zinc-100 shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] flex items-center justify-center group-hover:shadow-[0_15px_40px_-10px_rgba(217,164,65,0.35)] group-hover:-translate-y-1 transition-all duration-300">
-                      <Icon size={26} className="text-amber-500" />
+                    <div className="w-16 h-16 bg-[#FBF7EE] rounded-sm border border-[#C7A34C]/30 shadow-sm flex items-center justify-center group-hover:-translate-y-1 transition-all duration-300">
+                      <Icon size={26} className="text-[#6E1423]" />
                     </div>
-                    <span className="absolute -top-2 -right-2 w-7 h-7 bg-[#0A0C10] text-white text-xs font-bold rounded-full flex items-center justify-center">
-                      {step}
-                    </span>
                   </div>
+                  <p
+                    style={MARQUEE_FONT}
+                    className="text-[#C7A34C] text-xs mb-1"
+                  >
+                    {act}
+                  </p>
                   <h3
-                    style={HEADING_FONT}
-                    className="font-bold text-zinc-900 text-lg mb-2"
+                    style={DISPLAY_FONT}
+                    className="font-bold italic text-[#241A15] text-lg mb-2"
                   >
                     {title}
                   </h3>
-                  <p className="text-sm text-zinc-500 leading-relaxed">
+                  <p className="text-sm text-[#5C4A3A] leading-relaxed">
                     {desc}
                   </p>
                 </div>
@@ -793,30 +689,30 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── Final CTA ────────────────────────────────────────────────── */}
-        <section className="relative py-24 bg-[#0A0C10] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/25 via-transparent to-amber-900/15" />
-          <div
-            className="absolute w-[380px] h-[380px] rounded-full bg-amber-500/15 blur-[110px]"
-            style={{ top: "-15%", left: "50%", transform: "translateX(-50%)" }}
-          />
+        <section className="relative py-24 bg-[#120D0C] overflow-hidden">
+          <div className="absolute inset-0 opacity-30 tasa-curtain-fabric" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#120D0C] via-[#120D0C]/85 to-[#120D0C]/40" />
           <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-            <Flame size={44} className="text-amber-400 mx-auto mb-6 ix-float" />
+            <Drama
+              size={44}
+              className="text-[#C7A34C] mx-auto mb-6 tasa-float"
+            />
             <h2
-              style={HEADING_FONT}
-              className="text-3xl sm:text-4xl font-bold text-white mb-4"
+              style={DISPLAY_FONT}
+              className="text-3xl sm:text-4xl font-bold italic text-[#F4ECDA] mb-4"
             >
               Ready to make your vote count?
             </h2>
-            <p className="text-zinc-400 mb-9 max-w-lg mx-auto">
-              Support your favourite finalists across every Class of INTREPIDUS
-              award category. Every vote matters.
+            <p className="text-[#D8CDB8] mb-9 max-w-lg mx-auto">
+              Support your favourite performers across every TASA award
+              category. Every vote matters.
             </p>
             <Link
               to="/events"
-              className="ix-pulse-glow inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-10 sm:py-4 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-[#1A1204] font-semibold text-sm sm:text-base shadow-[0_15px_40px_-10px_rgba(217,164,65,0.55)] hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto max-w-xs mx-auto"
+              className="relative inline-flex items-center justify-center gap-2 px-10 py-4 rounded-sm bg-[#6E1423] text-[#F4ECDA] font-semibold text-base border border-[#C7A34C]/50 hover:bg-[#7A1830] transition-colors duration-300"
             >
-              <Zap size={18} className="flex-shrink-0" />
+              <span className="tasa-marquee-border absolute -inset-[3px] rounded-[3px] opacity-60 -z-10" />
+              <Zap size={18} />
               <span>Vote Now — It Only Takes a Minute</span>
             </Link>
           </div>
@@ -832,7 +728,6 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     const range = [];
     const rangeWithDots = [];
     let l;
-
     for (let i = 1; i <= totalPages; i++) {
       if (
         i === 1 ||
@@ -842,19 +737,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         range.push(i);
       }
     }
-
     for (const i of range) {
       if (l) {
-        if (i - l === 2) {
-          rangeWithDots.push(l + 1);
-        } else if (i - l !== 1) {
-          rangeWithDots.push("...");
-        }
+        if (i - l === 2) rangeWithDots.push(l + 1);
+        else if (i - l !== 1) rangeWithDots.push("...");
       }
       rangeWithDots.push(i);
       l = i;
     }
-
     return rangeWithDots;
   };
 
@@ -867,16 +757,15 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-sm border border-[#C7A34C]/30 text-[#5C4A3A] hover:border-[#C7A34C] disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronLeft size={16} />
       </button>
-
       {getPageNumbers().map((page, idx) =>
         page === "..." ? (
           <span
             key={`dots-${idx}`}
-            className="w-9 h-9 flex items-center justify-center text-zinc-300 text-sm select-none"
+            className="w-9 h-9 flex items-center justify-center text-[#C7A34C]/50 text-sm select-none"
           >
             …
           </span>
@@ -885,22 +774,21 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
             key={page}
             onClick={() => onPageChange(page)}
             aria-current={page === currentPage ? "page" : undefined}
-            className={`w-9 h-9 rounded-full text-sm font-medium border transition-all ${
+            className={`w-9 h-9 rounded-sm text-sm font-medium border transition-all ${
               page === currentPage
-                ? "bg-[#0A0C10] text-white border-[#0A0C10] shadow-sm"
-                : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50"
+                ? "bg-[#241A15] text-[#F4ECDA] border-[#241A15]"
+                : "bg-white text-[#5C4A3A] border-[#C7A34C]/30 hover:border-[#C7A34C]"
             }`}
           >
             {page}
           </button>
         ),
       )}
-
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50 disabled:opacity-30 disabled:pointer-events-none transition-all"
+        className="flex items-center justify-center w-9 h-9 rounded-sm border border-[#C7A34C]/30 text-[#5C4A3A] hover:border-[#C7A34C] disabled:opacity-30 disabled:pointer-events-none transition-all"
       >
         <ChevronRight size={16} />
       </button>
@@ -918,24 +806,22 @@ function EventCard({ event }) {
   return (
     <Link
       to={`/events/${event._id}`}
-      className={`block rounded-3xl bg-white border border-zinc-100 overflow-hidden group shadow-[0_2px_10px_-2px_rgba(20,20,25,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_-15px_rgba(76,95,217,0.2)] ${
-        isFlagship ? "ring-1 ring-amber-400/40" : ""
+      className={`block rounded-sm bg-white border border-[#C7A34C]/25 overflow-hidden group shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+        isFlagship ? "ring-1 ring-[#C7A34C]/50" : ""
       }`}
     >
       <div className="relative w-full h-44 overflow-hidden">
         <img
           src={bannerSrc}
           alt={event.title}
-          className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${
-            isFlagship ? "object-top" : "object-center"
-          }`}
+          className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isFlagship ? "object-top" : "object-center"}`}
         />
         <span className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold">
           <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />{" "}
           LIVE
         </span>
         {isFlagship && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/90 backdrop-blur-sm text-[#1A1204] text-[10px] font-bold">
+          <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C7A34C]/90 backdrop-blur-sm text-[#241A15] text-[10px] font-bold">
             <Crown size={11} /> FLAGSHIP
           </span>
         )}
@@ -949,20 +835,20 @@ function EventCard({ event }) {
       <div className="p-5">
         <div className="flex items-center justify-between gap-2 mb-3">
           <EventStatusBadge status={status} />
-          <span className="text-xs text-zinc-400">
+          <span className="text-xs text-[#8A7A64]">
             ₦{(event.pricePerVote / 100).toLocaleString()}/vote
           </span>
         </div>
         <h3
-          style={HEADING_FONT}
-          className="font-bold text-zinc-900 text-base leading-snug mb-1 group-hover:text-amber-700 transition-colors line-clamp-2"
+          style={DISPLAY_FONT}
+          className="font-bold italic text-[#241A15] text-base leading-snug mb-1 group-hover:text-[#6E1423] transition-colors line-clamp-2"
         >
           {event.title}
         </h3>
-        <p className="text-xs text-zinc-500 mb-3">{event.organization}</p>
+        <p className="text-xs text-[#8A7A64] mb-3">{event.organization}</p>
         <CountdownTimer targetDate={event.endDate} />
-        <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-zinc-50">
-          <span className="font-semibold text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+        <div className="flex items-center justify-between text-xs mt-3 pt-3 border-t border-[#F4ECDA]">
+          <span className="font-semibold text-[#6E1423] flex items-center gap-1 group-hover:gap-2 transition-all">
             Vote now <ArrowRight size={12} />
           </span>
         </div>
